@@ -2,6 +2,7 @@ package com.project.freelance.freelancing_platform.service;
 
 import com.project.freelance.freelancing_platform.dto.RegisterRequest;
 import com.project.freelance.freelancing_platform.model.FreelancerProfile;
+import com.project.freelance.freelancing_platform.model.Client;
 import com.project.freelance.freelancing_platform.model.User;
 import com.project.freelance.freelancing_platform.repository.FreelancerProfileRepository;
 import com.project.freelance.freelancing_platform.repository.UserRepository;
@@ -20,6 +21,7 @@ import java.util.Date;
 public class AuthService {
     private final UserRepository userRepository;
     private final FreelancerProfileRepository freelancerProfileRepository;
+    private final com.project.freelance.freelancing_platform.repository.ClientRepository clientRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final Key jwtKey;
@@ -27,14 +29,46 @@ public class AuthService {
 
     public AuthService(UserRepository userRepository,
             FreelancerProfileRepository freelancerProfileRepository,
+            com.project.freelance.freelancing_platform.repository.ClientRepository clientRepository,
             PasswordEncoder passwordEncoder,
             @Value("${jwt.secret}") String jwtSecret,
             @Value("${jwt.expiration-ms}") long jwtExpirationMs) {
         this.userRepository = userRepository;
         this.freelancerProfileRepository = freelancerProfileRepository;
+        this.clientRepository = clientRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         this.jwtExpirationMs = jwtExpirationMs;
+    }
+
+    public User register(RegisterRequest req) {
+        String role = req.role != null ? req.role.toUpperCase() : "FREELANCER";
+        if ("FREELANCER".equals(role))
+            return registerFreelancer(req);
+        if ("CLIENT".equals(role))
+            return registerClient(req);
+        throw new IllegalArgumentException("Unsupported role: " + req.role);
+    }
+
+    public User registerClient(RegisterRequest req) {
+        if (userRepository.findByEmail(req.email).isPresent()) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
+        User u = new User();
+        u.setEmail(req.email);
+        u.setPasswordHash(passwordEncoder.encode(req.password));
+        u.setUserType("CLIENT");
+        u.setFirstName(req.firstName);
+        u.setLastName(req.lastName);
+        u.setPhoneNumber(req.phoneNumber);
+        userRepository.save(u);
+
+        Client c = new Client();
+        c.setUser(u);
+        clientRepository.save(c);
+
+        return u;
     }
 
     public User registerFreelancer(RegisterRequest req) {
