@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
-        User u = authService.registerFreelancer(req);
+        User u = authService.register(req);
         return ResponseEntity.ok().body("registered");
     }
 

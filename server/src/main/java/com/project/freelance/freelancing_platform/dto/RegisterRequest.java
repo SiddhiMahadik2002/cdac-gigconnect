@@ -6,6 +6,10 @@ public class RegisterRequest {
     public String firstName;
     public String lastName;
     public String phoneNumber;
+    // role should be either "CLIENT" or "FREELANCER"; default FREELANCER
+    public String role;
+
+    // Freelancer specific fields
     public String title;
     public String description;
 }
