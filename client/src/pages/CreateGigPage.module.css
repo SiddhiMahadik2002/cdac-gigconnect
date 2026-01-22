@@ -1,0 +1,219 @@
+.createGig {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text);
+    margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error {
+    padding: var(--spacing-lg);
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-lg);
+    color: var(--error);
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.errorContainer {
+    text-align: center;
+    padding: var(--spacing-3xl);
+}
+
+.errorContainer h2 {
+    color: var(--text);
+    margin-bottom: var(--spacing-md);
+}
+
+.errorContainer p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3xl);
+}
+
+.section {
+    background-color: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: var(--spacing-2xl);
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text);
+    margin-bottom: var(--spacing-sm);
+}
+
+.sectionDescription {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.5;
+}
+
+.skillInput {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: end;
+    margin-bottom: var(--spacing-lg);
+}
+
+.skillInput>div {
+    flex: 1;
+}
+
+.skillTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.skillTag {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background-color: var(--primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+}
+
+.removeSkill {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.125rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: var(--spacing-xs);
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color var(--transition-fast);
+}
+
+.removeSkill:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.commonSkills {
+    margin-top: var(--spacing-lg);
+}
+
+.commonSkillsLabel {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.commonSkillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.commonSkillButton {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-weight: var(--font-weight-medium);
+}
+
+.commonSkillButton:hover {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.imageInputs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.fieldError {
+    color: var(--error);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-sm);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--border-light);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .section {
+        padding: var(--spacing-lg);
+    }
+
+    .skillInput {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.75rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .section {
+        padding: var(--spacing-md);
+    }
+}

@@ -1,0 +1,148 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    min-height: 44px;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none !important;
+}
+
+/* Primary button */
+.button.primary {
+    background: #10b981;
+    color: white;
+    border: 1px solid #10b981;
+}
+
+.button.primary:hover:not(:disabled) {
+    background: #059669;
+    border-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.button.primary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Secondary button */
+.button.secondary {
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.button.secondary:hover:not(:disabled) {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.button.secondary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+}
+
+/* Outline button */
+.button.outline {
+    background: transparent;
+    color: #10b981;
+    border: 2px solid #10b981;
+}
+
+.button.outline:hover:not(:disabled) {
+    background: #10b981;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.button.outline:focus-visible {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Ghost button */
+.button.ghost {
+    background: transparent;
+    color: #64748b;
+    border: none;
+}
+
+.button.ghost:hover:not(:disabled) {
+    background: #f1f5f9;
+    color: #475569;
+    transform: translateY(-1px);
+}
+
+/* Danger button */
+.button.danger {
+    background: #ef4444;
+    color: white;
+    border: 1px solid #ef4444;
+}
+
+.button.danger:hover:not(:disabled) {
+    background: #dc2626;
+    border-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.button.danger:focus-visible {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Size variants */
+.button.small {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    min-height: 36px;
+    border-radius: 6px;
+}
+
+.button.large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+    min-height: 52px;
+    border-radius: 10px;
+}
+
+/* Full width */
+.button.fullWidth {
+    width: 100%;
+}
+
+/* Loading state */
+.button.loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.button.loading::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
