@@ -1,0 +1,522 @@
+/* GigDetailPage - Modern Professional Design */
+.gigDetail {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.breadcrumbLink {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition-all);
+}
+
+.breadcrumbLink:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+    color: var(--text-muted);
+}
+
+.breadcrumbCurrent {
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
+}
+
+/* Error Container */
+.errorContainer {
+    text-align: center;
+    padding: var(--spacing-4xl);
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+}
+
+.errorContainer h2 {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: var(--spacing-md);
+}
+
+.errorContainer p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Content Layout */
+.content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: var(--spacing-3xl);
+}
+
+.mainContent {
+    min-width: 0;
+}
+
+/* Image Gallery */
+.imageGallery {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.mainImage {
+    width: 100%;
+    height: 400px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--background-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--text-muted);
+    background: var(--background-muted);
+}
+
+.placeholderIcon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.6;
+}
+
+.thumbnails {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    padding-bottom: var(--spacing-sm);
+}
+
+.thumbnail {
+    width: 80px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: var(--transition-all);
+    flex-shrink: 0;
+}
+
+.thumbnail:hover {
+    border-color: var(--primary-light);
+    transform: scale(1.05);
+}
+
+.activeThumbnail {
+    border-color: var(--primary);
+}
+
+/* Gig Info */
+.gigInfo {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3xl);
+}
+
+.gigHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.gigTitle {
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0;
+    flex: 1;
+}
+
+/* Freelancer Info */
+.freelancerInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    background: var(--background-subtle);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.freelancerAvatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
+    flex-shrink: 0;
+}
+
+.freelancerDetails {
+    flex: 1;
+    min-width: 0;
+}
+
+.freelancerName {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text);
+    margin-bottom: var(--spacing-xs);
+}
+
+.freelancerTitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.freelancerStats {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.freelancerLevel {
+    color: var(--primary);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Description */
+.description {
+    margin-bottom: var(--spacing-xl);
+}
+
+.description h3 {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text);
+    margin-bottom: var(--spacing-lg);
+}
+
+.descriptionContent {
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.descriptionContent p {
+    margin-bottom: var(--spacing-md);
+}
+
+.descriptionContent p:last-child {
+    margin-bottom: 0;
+}
+
+/* Skills */
+.skills h3 {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text);
+    margin-bottom: var(--spacing-lg);
+}
+
+.skillTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.skillTag {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-medium);
+    border: 1px solid var(--primary);
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+/* Order Card */
+.orderCard {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: var(--spacing-xl);
+}
+
+.priceSection {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.price {
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--primary);
+}
+
+.priceLabel {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+.packageDetails {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.packageItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.packageIcon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.orderActions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.ownerActions {
+    text-align: center;
+}
+
+.ownerNote {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-lg);
+    font-style: italic;
+}
+
+/* Info Card */
+.infoCard {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+}
+
+.infoCard h4 {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text);
+    margin-bottom: var(--spacing-lg);
+}
+
+.freelancerCard {
+    padding: var(--spacing-lg);
+    background: var(--background-subtle);
+    border-radius: var(--radius-lg);
+}
+
+.freelancerStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.statItem {
+    text-align: center;
+}
+
+.statItem strong {
+    display: block;
+    font-size: 1.125rem;
+    color: var(--text);
+    margin-bottom: var(--spacing-xs);
+}
+
+.statItem span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+    }
+
+    .sidebar {
+        order: -1;
+    }
+
+    .orderCard {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .gigDetail {
+        padding: var(--spacing-lg);
+    }
+
+    .breadcrumbCurrent {
+        max-width: 200px;
+    }
+
+    .gigInfo {
+        padding: var(--spacing-2xl);
+    }
+
+    .gigHeader {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-md);
+    }
+
+    .freelancerInfo {
+        padding: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+
+    .freelancerAvatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+
+    .mainImage {
+        height: 250px;
+    }
+
+    .orderCard {
+        padding: var(--spacing-xl);
+    }
+
+    .price {
+        font-size: 1.5rem;
+    }
+
+    .freelancerStats {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .gigDetail {
+        padding: var(--spacing-md);
+    }
+
+    .gigInfo {
+        padding: var(--spacing-lg);
+    }
+
+    .freelancerInfo {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--spacing-md);
+    }
+
+    .mainImage {
+        height: 200px;
+    }
+
+    .thumbnails {
+        gap: var(--spacing-sm);
+    }
+
+    .thumbnail {
+        width: 60px;
+        height: 45px;
+    }
+
+    .orderCard {
+        padding: var(--spacing-lg);
+    }
+
+    .breadcrumbCurrent {
+        max-width: 150px;
+    }
+
+    .packageDetails {
+        gap: var(--spacing-sm);
+    }
+
+    .skillTags {
+        gap: var(--spacing-xs);
+    }
+
+    .skillTag {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+    }
+
+    .errorContainer {
+        padding: var(--spacing-2xl);
+    }
+}
+
+/* Loading States */
+[aria-busy="true"] {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Hover Effects */
+.orderCard:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.infoCard:hover {
+    border-color: var(--primary-light);
+}
+
+/* Focus States */
+.thumbnail:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}

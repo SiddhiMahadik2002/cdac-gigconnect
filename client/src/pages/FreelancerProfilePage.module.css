@@ -1,0 +1,338 @@
+/* Freelancer Profile Page Styles */
+.profilePage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl);
+    min-height: calc(100vh - var(--header-height, 80px));
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--text);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.error {
+    background: var(--error-bg);
+    color: var(--error);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid var(--error-border);
+    text-align: center;
+}
+
+.success {
+    background: var(--success-bg);
+    color: var(--success);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid var(--success-border);
+    text-align: center;
+}
+
+/* Form */
+.form {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.section {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--primary-light);
+}
+
+.sectionDescription {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-lg);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+/* Skills Section */
+.skillInput {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+    margin-bottom: var(--spacing-lg);
+}
+
+.skillInput>div {
+    flex: 1;
+}
+
+.skillTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--background-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    min-height: 60px;
+    align-content: flex-start;
+}
+
+.skillTag {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--primary);
+    color: var(--white);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-medium);
+}
+
+.removeSkill {
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition-all);
+}
+
+.removeSkill:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.removeSkill:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.commonSkills {
+    margin-bottom: var(--spacing-lg);
+}
+
+.commonSkillsLabel {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.commonSkillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.commonSkillButton {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--background-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-all);
+}
+
+.commonSkillButton:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.commonSkillButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fieldError {
+    color: var(--error);
+    font-size: 0.9rem;
+    margin-top: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.fieldError::before {
+    content: '⚠️';
+    font-size: 0.8rem;
+}
+
+/* Actions */
+.actions {
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--border-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profilePage {
+        padding: var(--spacing-lg);
+    }
+
+    .form {
+        padding: var(--spacing-2xl);
+    }
+
+    .title {
+        font-size: 1.75rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .skillInput {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sectionTitle {
+        font-size: 1.125rem;
+    }
+
+    .commonSkillsList {
+        gap: var(--spacing-xs);
+    }
+
+    .commonSkillButton {
+        font-size: 0.75rem;
+        padding: var(--spacing-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .profilePage {
+        padding: var(--spacing-md);
+    }
+
+    .form {
+        padding: var(--spacing-xl);
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .section {
+        margin-bottom: var(--spacing-2xl);
+    }
+
+    .sectionTitle {
+        font-size: 1rem;
+    }
+
+    .skillTags {
+        padding: var(--spacing-md);
+        min-height: 50px;
+    }
+
+    .skillTag {
+        font-size: 0.8rem;
+        padding: var(--spacing-xs);
+    }
+
+    .removeSkill {
+        width: 14px;
+        height: 14px;
+        font-size: 0.9rem;
+    }
+
+    .commonSkillButton {
+        font-size: 0.7rem;
+    }
+}
+
+/* Focus States */
+.skillInput input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.removeSkill:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 1px;
+}
+
+.commonSkillButton:focus {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+/* Animation */
+.skillTag {
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.commonSkillButton:hover {
+    transform: translateY(-1px);
+}
+
+/* Loading States */
+.form[aria-busy="true"] {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.form[aria-busy="true"] * {
+    cursor: not-allowed;
+}

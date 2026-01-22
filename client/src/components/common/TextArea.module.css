@@ -1,0 +1,94 @@
+.textareaGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--text);
+    margin-bottom: var(--spacing-xs);
+}
+
+.label.required::after {
+    content: ' *';
+    color: var(--error);
+}
+
+.textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: white;
+    color: var(--text);
+    transition: all var(--transition-fast);
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.textarea:disabled {
+    background-color: var(--bg-secondary);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    resize: none;
+}
+
+.textarea.error {
+    border-color: var(--error);
+}
+
+.textarea.error:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+/* Character count */
+.characterCount {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: right;
+    margin-top: var(--spacing-xs);
+}
+
+.characterCount.overLimit {
+    color: var(--error);
+}
+
+/* Error message */
+.errorMessage {
+    font-size: 0.75rem;
+    color: var(--error);
+    margin-top: var(--spacing-xs);
+}
+
+/* Helper text */
+.helperText {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+/* Size variants */
+.textarea.small {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.8125rem;
+    min-height: 80px;
+}
+
+.textarea.large {
+    padding: var(--spacing-lg);
+    font-size: 1rem;
+    min-height: 120px;
+}
