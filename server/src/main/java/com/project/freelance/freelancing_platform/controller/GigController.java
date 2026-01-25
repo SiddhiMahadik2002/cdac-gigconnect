@@ -76,6 +76,16 @@ public class GigController {
         return ResponseEntity.ok(toDto(g));
     }
 
+    @GetMapping("/freelancer/{freelancerId}")
+    public ResponseEntity<Page<GigResponse>> getGigsByFreelancer(
+            @PathVariable Long freelancerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Gig> gigs = gigService.getGigsByFreelancer(freelancerId, pageable);
+        return ResponseEntity.ok(gigs.map(this::toDto));
+    }
+
     private GigResponse toDto(Gig g) {
         GigResponse r = new GigResponse();
         r.id = g.getId();

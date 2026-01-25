@@ -59,8 +59,8 @@ public class AuthService {
         u.setEmail(req.email);
         u.setPasswordHash(passwordEncoder.encode(req.password));
         u.setUserType("CLIENT");
-        u.setFirstName(req.firstName);
-        u.setLastName(req.lastName);
+        u.setFirstName(req.getFirstName());
+        u.setLastName(req.getLastName());
         u.setPhoneNumber(req.phoneNumber);
         userRepository.save(u);
 
@@ -80,8 +80,8 @@ public class AuthService {
         u.setEmail(req.email);
         u.setPasswordHash(passwordEncoder.encode(req.password));
         u.setUserType("FREELANCER");
-        u.setFirstName(req.firstName);
-        u.setLastName(req.lastName);
+        u.setFirstName(req.getFirstName());
+        u.setLastName(req.getLastName());
         u.setPhoneNumber(req.phoneNumber);
         userRepository.save(u);
 

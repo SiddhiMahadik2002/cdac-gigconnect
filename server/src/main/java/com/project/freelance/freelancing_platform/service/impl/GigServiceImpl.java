@@ -97,6 +97,11 @@ public class GigServiceImpl implements GigService {
     }
 
     @Override
+    public Page<Gig> getGigsByFreelancer(Long freelancerId, Pageable pageable) {
+        return gigRepository.findByFreelancerFreelancerIdAndDeletedFalse(freelancerId, pageable);
+    }
+
+    @Override
     public Page<Gig> searchGigs(String skill, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Gig> cq = cb.createQuery(Gig.class);
