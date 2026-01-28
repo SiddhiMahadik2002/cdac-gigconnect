@@ -10,7 +10,7 @@ const TextArea = forwardRef(({
     showCharCount = false,
     size = 'medium',
     className = '',
-    value = '',
+    value,
     ...props
 }, ref) => {
     const textareaClass = [
@@ -20,11 +20,23 @@ const TextArea = forwardRef(({
         className
     ].filter(Boolean).join(' ');
 
-    const isOverLimit = maxLength && value.length > maxLength;
+    const isOverLimit = maxLength && value && value.length > maxLength;
     const charCountClass = [
         styles.characterCount,
         isOverLimit && styles.overLimit
     ].filter(Boolean).join(' ');
+
+    const textareaProps = {
+        ref,
+        className: textareaClass,
+        maxLength,
+        ...props
+    };
+
+    // Only add value prop if it's provided (for controlled components)
+    if (value !== undefined) {
+        textareaProps.value = value;
+    }
 
     return (
         <div className={styles.textareaGroup}>
@@ -37,15 +49,11 @@ const TextArea = forwardRef(({
                 </label>
             )}
             <textarea
-                ref={ref}
-                className={textareaClass}
-                value={value}
-                maxLength={maxLength}
-                {...props}
+                {...textareaProps}
             />
             {showCharCount && maxLength && (
                 <div className={charCountClass}>
-                    {value.length}/{maxLength}
+                    {(value || '').length}/{maxLength}
                 </div>
             )}
             {error && (

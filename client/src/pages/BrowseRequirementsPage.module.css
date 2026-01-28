@@ -1,5 +1,5 @@
-/* Freelancer Gigs Page Styles */
-.freelancerGigs {
+/* Browse Requirements Page Styles */
+.browseRequirements {
     min-height: 100vh;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     padding: 20px 0;
@@ -127,14 +127,14 @@
     line-height: 1.5;
 }
 
-/* Gigs List */
-.gigsList {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 28px;
+/* Requirements List */
+.requirementsList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.gigCard {
+.requirementCard {
     background: white;
     border-radius: 16px;
     overflow: hidden;
@@ -143,84 +143,79 @@
     transition: all 0.3s ease;
 }
 
-.gigCard:hover {
-    transform: translateY(-4px);
+.requirementCard:hover {
+    transform: translateY(-2px);
     box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
 }
 
-.gigImage {
-    position: relative;
-    height: 200px;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+.cardHeader {
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.imagePlaceholder {
-    font-size: 3rem;
-    opacity: 0.5;
-}
-
-.gigImage img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.statusBadge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.statusBadge.active {
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #bbf7d0;
-}
-
-.statusBadge.inactive {
-    background: #fef3c7;
-    color: #92400e;
-    border: 1px solid #fde68a;
-}
-
-.gigContent {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    flex: 1;
-}
-
-.gigMain {
-    flex: 1;
+    align-items: center;
+    padding: 24px 24px 0 24px;
     margin-bottom: 16px;
 }
 
-.gigTitle {
+.clientInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clientAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.clientDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.clientName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.postedDate {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.budget {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #10b981;
+    text-align: right;
+}
+
+.cardContent {
+    padding: 0 24px 24px 24px;
+}
+
+.requirementTitle {
+    font-size: 1.4rem;
     font-weight: 600;
     color: #1e293b;
     margin: 0 0 12px 0;
     line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
-.gigDescription {
-    font-size: 0.9rem;
+.requirementDescription {
+    font-size: 0.95rem;
     color: #64748b;
-    line-height: 1.5;
+    line-height: 1.6;
     margin: 0 0 16px 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -228,24 +223,23 @@
     overflow: hidden;
 }
 
-.gigMeta {
+.requirementMeta {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
     margin-bottom: 16px;
 }
 
-.gigPrice {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #10b981;
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #64748b;
 }
 
-.gigStats {
-    display: flex;
-    gap: 12px;
-    font-size: 0.85rem;
-    color: #64748b;
+.metaIcon {
+    font-size: 1rem;
 }
 
 .skillTags {
@@ -265,50 +259,37 @@
     border: 1px solid #99f6e4;
 }
 
-.gigActions {
+.cardFooter {
+    padding: 0 24px 24px 24px;
+}
+
+.cardFooter button {
+    width: 100%;
+}
+
+/* Pagination */
+.pagination {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: auto;
-}
-
-.gigActions button,
-.gigActions a button {
-    font-size: 0.8rem;
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 40px;
+    padding: 24px;
     background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.pageInfo {
+    font-size: 0.95rem;
     color: #64748b;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.gigActions button:hover,
-.gigActions a button:hover {
-    background: #f8fafc;
-    border-color: #10b981;
-    color: #10b981;
-}
-
-.gigActions a {
-    text-decoration: none;
+    font-weight: 500;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .gigsList {
-        grid-template-columns: 1fr;
-    }
-
-    .gigCard {
-        flex-direction: column;
-    }
-
-    .gigImage {
-        width: 100%;
-        height: 180px;
+    .requirementsList {
+        gap: 20px;
     }
 }
 
@@ -317,7 +298,7 @@
         padding: 0 16px;
     }
 
-    .freelancerGigs {
+    .browseRequirements {
         padding: 16px 0;
     }
 
@@ -347,22 +328,28 @@
         padding: 20px;
     }
 
-    .gigsList {
-        gap: 20px;
+    .cardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 20px 20px 0 20px;
     }
 
-    .gigContent {
-        padding: 20px;
+    .budget {
+        font-size: 1.3rem;
+        text-align: left;
     }
 
-    .gigActions {
-        gap: 6px;
+    .cardContent {
+        padding: 0 20px 20px 20px;
     }
 
-    .gigActions button,
-    .gigActions a button {
-        font-size: 0.75rem;
-        padding: 4px 8px;
+    .requirementTitle {
+        font-size: 1.2rem;
+    }
+
+    .cardFooter {
+        padding: 0 20px 20px 20px;
     }
 }
 
@@ -375,18 +362,17 @@
         font-size: 1.8rem;
     }
 
-    .gigMeta {
+    .requirementMeta {
         flex-direction: column;
-        align-items: flex-start;
         gap: 8px;
     }
 
-    .skillTags {
-        margin-bottom: 12px;
+    .pagination {
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .gigActions {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+    .pagination button {
+        width: 100%;
     }
 }

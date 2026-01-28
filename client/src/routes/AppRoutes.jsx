@@ -14,6 +14,16 @@ import FreelancerProfilePage from '../pages/FreelancerProfilePage.jsx';
 import FreelancerGigsPage from '../pages/FreelancerGigsPage.jsx';
 import CreateGigPage from '../pages/CreateGigPage.jsx';
 import EditGigPage from '../pages/EditGigPage.jsx';
+import ActiveProjectsPage from '../pages/ActiveProjectsPage.jsx';
+import CreateRequirementPage from '../pages/CreateRequirementPage.jsx';
+import ClientRequirementsPage from '../pages/ClientRequirementsPage.jsx';
+import ClientProjectsPage from '../pages/ClientProjectsPage.jsx';
+import BrowseRequirementsPage from '../pages/BrowseRequirementsPage.jsx';
+import RequirementProposalsPage from '../pages/RequirementProposalsPage.jsx';
+import RequirementDetailPage from '../pages/RequirementDetailPage.jsx';
+import MyOrdersPage from '../pages/MyOrdersPage.jsx';
+import CompletedWorkPage from '../pages/CompletedWorkPage.jsx';
+import OrderSuccessPage from '../pages/OrderSuccessPage.jsx';
 import { USER_ROLES } from '../utils/constants.js';
 
 // Layout wrapper component
@@ -75,6 +85,72 @@ const AppRoutes = () => {
                 <Route path="freelancer/gigs/edit/:id" element={
                     <ProtectedRoute requireRole={USER_ROLES.FREELANCER}>
                         <EditGigPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Active Projects for freelancers */}
+                <Route path="freelancer/projects" element={
+                    <ProtectedRoute requireRole={USER_ROLES.FREELANCER}>
+                        <ActiveProjectsPage />
+                    </ProtectedRoute>
+                } />
+
+                <Route path="freelancer/completed-work" element={
+                    <ProtectedRoute requireRole={USER_ROLES.FREELANCER}>
+                        <CompletedWorkPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Browse requirements for freelancers */}
+                <Route path="requirements" element={
+                    <ProtectedRoute requireRole={USER_ROLES.FREELANCER}>
+                        <BrowseRequirementsPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Protected routes for clients */}
+                <Route path="create-requirement" element={
+                    <ProtectedRoute requireRole={USER_ROLES.CLIENT}>
+                        <CreateRequirementPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="my-requirements" element={
+                    <ProtectedRoute requireRole={USER_ROLES.CLIENT}>
+                        <ClientRequirementsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="client/projects" element={
+                    <ProtectedRoute requireRole={USER_ROLES.CLIENT}>
+                        <ClientProjectsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="requirements/:requirementId" element={
+                    <ProtectedRoute>
+                        <RequirementDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="requirements/:requirementId/proposals" element={
+                    <ProtectedRoute requireRole={USER_ROLES.CLIENT}>
+                        <RequirementProposalsPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Order Management Routes */}
+                <Route path="my-orders" element={
+                    <ProtectedRoute>
+                        <MyOrdersPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="orders/success" element={
+                    <ProtectedRoute>
+                        <OrderSuccessPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Legacy route aliases for backward compatibility */}
+                <Route path="active-projects" element={
+                    <ProtectedRoute>
+                        <MyOrdersPage />
                     </ProtectedRoute>
                 } />
             </Route>

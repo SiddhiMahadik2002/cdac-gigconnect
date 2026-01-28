@@ -104,6 +104,24 @@
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
+/* Success button */
+.button.success {
+    background: #10b981;
+    color: white;
+    border: 1px solid #10b981;
+}
+
+.button.success:hover:not(:disabled) {
+    background: #059669;
+    border-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.button.success:focus-visible {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
 /* Size variants */
 .button.small {
     padding: 0.5rem 1rem;

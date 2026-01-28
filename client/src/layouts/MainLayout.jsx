@@ -86,6 +86,34 @@ const MainLayout = ({ children }) => {
                                             </li>
                                         </>
                                     )}
+                                    {role === USER_ROLES.CLIENT && (
+                                        <>
+                                            <li>
+                                                <Link
+                                                    to="/my-requirements"
+                                                    className={`${styles.navLink} ${isActiveLink('/my-requirements') ? styles.active : ''}`}
+                                                >
+                                                    My Requirements
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    to="/client/projects"
+                                                    className={`${styles.navLink} ${isActiveLink('/client/projects') ? styles.active : ''}`}
+                                                >
+                                                    My Projects
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    to="/create-requirement"
+                                                    className={`${styles.navLink} ${isActiveLink('/create-requirement') ? styles.active : ''}`}
+                                                >
+                                                    Post Requirement
+                                                </Link>
+                                            </li>
+                                        </>
+                                    )}
                                 </ul>
 
                                 <div className={styles.userMenu} ref={dropdownRef}>
@@ -112,6 +140,18 @@ const MainLayout = ({ children }) => {
                                                 </Link>
                                                 <Link to="/freelancer/gigs/new" className={styles.dropdownItem}>
                                                     ➕ Create Gig
+                                                </Link>
+                                                <div className={styles.dropdownDivider} />
+                                            </>
+                                        )}
+
+                                        {role === USER_ROLES.CLIENT && (
+                                            <>
+                                                <Link to="/my-requirements" className={styles.dropdownItem}>
+                                                    📋 My Requirements
+                                                </Link>
+                                                <Link to="/create-requirement" className={styles.dropdownItem}>
+                                                    ➕ Post Requirement
                                                 </Link>
                                                 <div className={styles.dropdownDivider} />
                                             </>

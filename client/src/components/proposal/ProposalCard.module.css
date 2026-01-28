@@ -1,0 +1,244 @@
+.proposalCard {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.proposalCard:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border-color: #10b981;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Status badge colors */
+.statusBadge.pending {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+.statusBadge.accepted,
+.statusBadge.in_progress {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.statusBadge.rejected {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.statusBadge.completion_requested {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+.statusBadge.revision_requested {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+    color: #9a3412;
+    border: 1px solid #fb923c;
+}
+
+.statusBadge.completed {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.proposedPrice {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #10b981;
+}
+
+.freelancerInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.freelancerAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.freelancerName {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+}
+
+.submittedDate {
+    font-size: 0.8125rem;
+    color: #64748b;
+}
+
+.proposalMessage {
+    background: #f8fafc;
+    border-left: 3px solid #10b981;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.proposalMessage p {
+    margin: 0;
+    color: #475569;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+/* Status-specific info boxes */
+.completionInfo,
+.revisionInfo,
+.rejectedInfo {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.completionInfo {
+    background: #ecfdf5;
+    border: 1px solid #6ee7b7;
+}
+
+.revisionInfo {
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+}
+
+.rejectedInfo {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+}
+
+.infoHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.infoIcon {
+    font-size: 1rem;
+}
+
+.infoHeader strong {
+    font-size: 0.875rem;
+    color: #1e293b;
+}
+
+.infoText {
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.deliverableLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #10b981;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    margin-top: 8px;
+    transition: color 0.2s;
+}
+
+.deliverableLink:hover {
+    color: #059669;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.actions button {
+    flex: 1;
+}
+
+.disabledInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.disabledReason {
+    font-size: 0.8125rem;
+    color: #64748b;
+    font-style: italic;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border-left: 3px solid #cbd5e1;
+}
+
+.statusDescription {
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.statusDescriptionText {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .proposalCard {
+        padding: 20px;
+    }
+
+    .cardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+}
