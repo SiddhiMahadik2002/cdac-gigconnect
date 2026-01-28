@@ -2,6 +2,7 @@ package com.project.freelance.freelancing_platform.proposal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
@@ -21,4 +22,8 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long> {
     boolean existsByRequirementIdAndFreelancerFreelancerId(Long requirementId, Long freelancerId);
 
     long countByRequirementId(Long requirementId);
+
+    @Modifying
+    @Query("UPDATE Proposal p SET p.status = 'REJECTED' WHERE p.requirement.id = :requirementId AND p.id != :acceptedProposalId AND p.status = 'PENDING'")
+    int rejectOtherProposalsForRequirement(@Param("requirementId") Long requirementId, @Param("acceptedProposalId") Long acceptedProposalId);
 }

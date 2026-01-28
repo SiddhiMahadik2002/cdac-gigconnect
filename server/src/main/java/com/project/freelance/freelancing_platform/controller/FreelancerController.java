@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/freelancers")
+@RequestMapping("/api/v1/freelancers")
 public class FreelancerController {
     private final FreelancerProfileRepository repo;
 
