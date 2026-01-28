@@ -4,6 +4,7 @@ import { getGigById } from '../api/gig.api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import Button from '../components/common/Button.jsx';
 import Loader from '../components/common/Loader.jsx';
+import PayNowButton from '../components/payment/PayNowButton.jsx';
 import { formatCurrency } from '../utils/nameMapper.js';
 import { USER_ROLES } from '../utils/constants.js';
 import styles from './GigDetailPage.module.css';
@@ -107,6 +108,33 @@ Feel free to message me before placing an order to discuss your specific require
       setOrderLoading(false);
       alert('Order functionality coming soon!');
     }, 2000);
+  };
+
+  const handlePaymentSuccess = (paymentData) => {
+    console.log('Payment successful:', paymentData);
+
+    const { orderDetails, paymentId, orderId } = paymentData;
+
+    // Redirect to success page with enhanced order details
+    const searchParams = new URLSearchParams({
+      orderId: orderId || 'unknown',
+      paymentId: paymentId,
+      referenceType: paymentData.referenceType,
+      referenceId: paymentData.referenceId
+    });
+
+    // If we have order details, we can add more context
+    if (orderDetails) {
+      searchParams.append('orderNumber', orderDetails.id);
+      searchParams.append('amount', orderDetails.amount);
+    }
+
+    navigate(`/orders/success?${searchParams.toString()}`);
+  };
+
+  const handlePaymentFailure = (error) => {
+    console.error('Payment failed:', error);
+    setOrderLoading(false);
   };
 
   const handleContactFreelancer = () => {
@@ -345,17 +373,21 @@ Feel free to message me before placing an order to discuss your specific require
 
             {!isOwner ? (
               <div className={styles.orderActions}>
-                <Button
+                <PayNowButton
+                  referenceType="GIG"
+                  referenceId={gig.id}
+                  amount={gig.fixedPrice}
+                  onSuccess={handlePaymentSuccess}
+                  onFailure={handlePaymentFailure}
                   variant="primary"
                   fullWidth
                   size="large"
-                  onClick={handleOrderNow}
-                  loading={orderLoading}
-                  disabled={orderLoading}
                   className={styles.orderButton}
                 >
-                  Continue ({formatCurrency(gig.fixedPrice)})
-                </Button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>Continue ({formatCurrency(gig.fixedPrice)})</span>
+                  </div>
+                </PayNowButton>
                 <Button
                   variant="outline"
                   fullWidth

@@ -1,0 +1,379 @@
+/* ClientRequirementsPage - Modern Professional Design */
+.clientRequirements {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    gap: 2rem;
+}
+
+.headerContent {
+    flex: 1;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #1e293b, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Error Alert */
+.errorAlert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.errorIcon {
+    font-size: 1.125rem;
+}
+
+/* Controls */
+.controls {
+    margin-bottom: 2rem;
+}
+
+.filterTabs {
+    display: flex;
+    gap: 0.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.filterTab {
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.filterTab:hover {
+    background: #f1f5f9;
+    color: #10b981;
+}
+
+.filterTab.active {
+    background: #10b981;
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+}
+
+/* Requirements List */
+.requirementsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.requirementCard {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    padding: 2rem;
+    box-shadow: 0 2px 15px rgba(15, 23, 42, 0.06);
+    transition: all 0.3s ease;
+}
+
+.requirementCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1);
+}
+
+/* Card Header */
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.cardTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.cardTitle h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.statusBadge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.statusOpen {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.statusClosed {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.cardMeta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.postedDate {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+/* Card Content */
+.cardContent {
+    margin-bottom: 1.5rem;
+}
+
+.description {
+    color: #475569;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+}
+
+.requirementDetails {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detailLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.detailValue {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Card Actions */
+.cardActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+}
+
+.viewLink,
+.proposalsLink {
+    color: #10b981;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.viewLink:hover,
+.proposalsLink:hover {
+    background: #f0fdf4;
+    text-decoration: none;
+}
+
+.proposalsLink {
+    background: #10b981;
+    color: white;
+    font-weight: 600;
+}
+
+.proposalsLink:hover {
+    background: #059669;
+    color: white;
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 2px dashed #cbd5e1;
+    margin-top: 2rem;
+}
+
+.emptyIcon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.emptyState h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.emptyState p {
+    color: #64748b;
+    margin: 0 0 2rem 0;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Loading Container */
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    background: #ffffff;
+    border-radius: 16px;
+    margin: 2rem auto;
+}
+
+/* Error Container */
+.errorContainer {
+    text-align: center;
+    padding: 3rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.errorContainer h2 {
+    color: #dc2626;
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+}
+
+.errorContainer p {
+    color: #64748b;
+    margin: 0 0 2rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .requirementDetails {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .clientRequirements {
+        padding: 1rem 0;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .requirementCard {
+        padding: 1.5rem;
+    }
+
+    .cardHeader {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .cardTitle {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .requirementDetails {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .cardActions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .viewLink,
+    .proposalsLink {
+        text-align: center;
+        padding: 0.75rem;
+    }
+
+    .filterTabs {
+        overflow-x: auto;
+    }
+
+    .filterTab {
+        flex-shrink: 0;
+    }
+}
