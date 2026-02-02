@@ -19,6 +19,8 @@ public class ProposalResponse {
     public OffsetDateTime submittedAt;
     public OffsetDateTime completedAt;
 
+    public Integer rating;
+
     // Enriched requirement details (for ongoing jobs view)
     public String requirementTitle;
     public String requirementDescription;

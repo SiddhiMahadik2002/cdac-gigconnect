@@ -17,7 +17,19 @@ public class FreelancerProfile {
     @Column(length = 2000)
     private String description;
 
-    // Additional fields can be added later
+    // Social links
+    @Column(name = "linkedin", length = 1024)
+    private String linkedin;
+
+    @Column(name = "github", length = 1024)
+    private String github;
+
+    @Column(name = "portfolio", length = 1024)
+    private String portfolio;
+
+    // Comma or semicolon separated skills string (stored as text)
+    @Column(name = "skills", length = 2000)
+    private String skills;
 
     public Long getFreelancerId() {
         return freelancerId;
@@ -49,5 +61,37 @@ public class FreelancerProfile {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLinkedin() {
+        return linkedin;
+    }
+
+    public void setLinkedin(String linkedin) {
+        this.linkedin = linkedin;
+    }
+
+    public String getGithub() {
+        return github;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
+    }
+
+    public String getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(String portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
     }
 }

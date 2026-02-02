@@ -9,6 +9,8 @@ import com.project.freelance.freelancing_platform.mapper.ProposalMapper;
 import com.project.freelance.freelancing_platform.model.FreelancerProfile;
 import com.project.freelance.freelancing_platform.proposal.Proposal;
 import com.project.freelance.freelancing_platform.proposal.ProposalRepository;
+import com.project.freelance.freelancing_platform.model.Review;
+import com.project.freelance.freelancing_platform.repository.ReviewRepository;
 import com.project.freelance.freelancing_platform.requirement.Requirement;
 import com.project.freelance.freelancing_platform.requirement.RequirementRepository;
 import com.project.freelance.freelancing_platform.service.ProposalService;
@@ -25,12 +27,14 @@ public class ProposalServiceImpl implements ProposalService {
     private final ProposalRepository proposalRepository;
     private final RequirementRepository requirementRepository;
     private final ProposalMapper proposalMapper;
+    private final ReviewRepository reviewRepository;
 
     public ProposalServiceImpl(ProposalRepository proposalRepository, RequirementRepository requirementRepository,
-            ProposalMapper proposalMapper) {
+            ProposalMapper proposalMapper, ReviewRepository reviewRepository) {
         this.proposalRepository = proposalRepository;
         this.requirementRepository = requirementRepository;
         this.proposalMapper = proposalMapper;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -132,6 +136,26 @@ public class ProposalServiceImpl implements ProposalService {
         p.setStatus(com.project.freelance.freelancing_platform.proposal.ProposalStatus.COMPLETED);
         p.setClientFeedback(req.feedback);
         p.setCompletedAt(OffsetDateTime.now());
+
+        // Save optional rating (1-5) if provided
+        if (req.rating != null) {
+            if (req.rating < 1 || req.rating > 5)
+                throw new IllegalArgumentException("Rating must be between 1 and 5");
+            p.setRating(req.rating);
+        }
+
+        // Persist review into separate reviews table when client provides feedback/rating
+        if ((req.feedback != null && !req.feedback.trim().isEmpty()) || req.rating != null) {
+            Review review = new Review();
+            review.setFreelancer(p.getFreelancer());
+            // determine client from requirement
+            if (p.getRequirement() != null && p.getRequirement().getClient() != null) {
+                review.setClient(p.getRequirement().getClient());
+            }
+            review.setRating(req.rating);
+            review.setFeedback(req.feedback);
+            reviewRepository.save(review);
+        }
 
         // Mark requirement as COMPLETED
         r.setStatus(com.project.freelance.freelancing_platform.requirement.RequirementStatus.COMPLETED);

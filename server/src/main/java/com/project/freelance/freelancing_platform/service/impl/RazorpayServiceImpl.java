@@ -11,6 +11,7 @@ import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +30,14 @@ import java.util.UUID;
 @Slf4j
 public class RazorpayServiceImpl implements RazorpayService {
 
-    private final RazorpayClient razorpayClient;
+    @Autowired(required = false)
+    private RazorpayClient razorpayClient;
     private final PaymentRepository paymentRepository;
 
-    @Value("${razorpay.key_id}")
+    @Value("${razorpay.key_id:}")
     private String razorpayKeyId;
 
-    @Value("${razorpay.key_secret}")
+    @Value("${razorpay.key_secret:}")
     private String razorpayKeySecret;
 
     @Override
@@ -157,7 +159,8 @@ public class RazorpayServiceImpl implements RazorpayService {
             Payment savedPayment = paymentRepository.save(payment);
 
             // Note: Order creation is now handled separately by OrderController
-            // after payment verification. This decouples payment processing from order creation.
+            // after payment verification. This decouples payment processing from order
+            // creation.
 
             log.info("Payment verified successfully for order: {}, payment: {}", orderId, paymentId);
 

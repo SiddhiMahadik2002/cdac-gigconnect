@@ -30,6 +30,9 @@ public class UpdateOrderStatusRequest {
     @Schema(description = "Revision notes (for REVISION_REQUESTED status)", example = "Please update the color scheme")
     private String revisionNotes;
 
+    @Schema(description = "Optional numeric rating (1-5) provided by client", example = "5")
+    private Integer rating;
+
     @Schema(description = "Delivery date (auto-set for DELIVERED status)")
     private OffsetDateTime deliveryDate;
 }

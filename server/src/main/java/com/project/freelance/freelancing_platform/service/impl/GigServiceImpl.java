@@ -102,7 +102,7 @@ public class GigServiceImpl implements GigService {
     }
 
     @Override
-    public Page<Gig> searchGigs(String skill, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+    public Page<Gig> searchGigs(String search, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Gig> cq = cb.createQuery(Gig.class);
         Root<Gig> root = cq.from(Gig.class);
@@ -110,8 +110,12 @@ public class GigServiceImpl implements GigService {
         List<Predicate> preds = new ArrayList<>();
         preds.add(cb.isFalse(root.get("deleted")));
 
-        if (skill != null && !skill.isBlank()) {
-            preds.add(cb.like(cb.lower(root.get("skills")), cb.literal("%" + skill.toLowerCase() + "%")));
+        if (search != null && !search.isBlank()) {
+            String s = "%" + search.toLowerCase() + "%";
+            Predicate bySkills = cb.like(cb.lower(root.get("skills")), cb.literal(s));
+            Predicate byTitle = cb.like(cb.lower(root.get("title")), cb.literal(s));
+            Predicate byDesc = cb.like(cb.lower(root.get("description")), cb.literal(s));
+            preds.add(cb.or(bySkills, byTitle, byDesc));
         }
 
         if (minPrice != null) {

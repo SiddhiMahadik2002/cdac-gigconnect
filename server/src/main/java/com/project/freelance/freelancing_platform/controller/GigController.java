@@ -2,6 +2,11 @@ package com.project.freelance.freelancing_platform.controller;
 
 import com.project.freelance.freelancing_platform.dto.GigRequest;
 import com.project.freelance.freelancing_platform.dto.GigResponse;
+import com.project.freelance.freelancing_platform.dto.ReviewResponse;
+import com.project.freelance.freelancing_platform.model.FreelancerProfile;
+import com.project.freelance.freelancing_platform.model.Review;
+import com.project.freelance.freelancing_platform.repository.FreelancerProfileRepository;
+import com.project.freelance.freelancing_platform.repository.ReviewRepository;
 import com.project.freelance.freelancing_platform.model.Gig;
 import com.project.freelance.freelancing_platform.service.GigService;
 import org.springframework.data.domain.Page;
@@ -19,9 +24,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/gigs")
 public class GigController {
     private final GigService gigService;
+    private final FreelancerProfileRepository freelancerProfileRepository;
+    private final ReviewRepository reviewRepository;
 
-    public GigController(GigService gigService) {
+    public GigController(GigService gigService,
+            FreelancerProfileRepository freelancerProfileRepository,
+            ReviewRepository reviewRepository) {
         this.gigService = gigService;
+        this.freelancerProfileRepository = freelancerProfileRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @PostMapping
@@ -62,12 +73,23 @@ public class GigController {
 
     @GetMapping
     public Page<GigResponse> listGigs(@RequestParam(required = false) String skill,
+            @RequestParam(required = false, name = "search") String search,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return gigService.searchGigs(skill, minPrice, maxPrice, pageable).map(this::toDto);
+        // Priority: category (for filtering skills) -> search -> skill
+        String effective = null;
+        if (category != null && !category.isBlank()) {
+            effective = category;
+        } else if (search != null && !search.isBlank()) {
+            effective = search;
+        } else {
+            effective = skill;
+        }
+        return gigService.searchGigs(effective, minPrice, maxPrice, pageable).map(this::toDto);
     }
 
     @GetMapping("/{id}")
@@ -97,6 +119,51 @@ public class GigController {
         r.status = g.getStatus().name();
         r.createdAt = g.getCreatedAt();
         r.updatedAt = g.getUpdatedAt();
+        // Populate freelancer meta if available
+        if (r.freelancerId != null) {
+            FreelancerProfile fp = freelancerProfileRepository.findById(r.freelancerId).orElse(null);
+            if (fp != null) {
+                if (fp.getUser() != null) {
+                    String fn = fp.getUser().getFirstName() != null ? fp.getUser().getFirstName() : "";
+                    String ln = fp.getUser().getLastName() != null ? fp.getUser().getLastName() : "";
+                    r.freelancerName = (fn + " " + ln).trim();
+                }
+                r.freelancerTitle = fp.getTitle();
+                r.freelancerDescription = fp.getDescription();
+
+                // Ratings and recent reviews
+                Double avg = reviewRepository.findAverageRatingByFreelancerId(r.freelancerId);
+                Long count = reviewRepository.countByFreelancerIdWithRating(r.freelancerId);
+                r.averageRating = avg != null ? avg : 0.0;
+                r.ratingCount = count != null ? count : 0L;
+
+                java.util.List<Review> recent = reviewRepository
+                        .findTop5ByFreelancerFreelancerIdOrderByCreatedAtDesc(r.freelancerId);
+                if (recent != null && !recent.isEmpty()) {
+                    r.recentReviews = recent.stream().map(rv -> {
+                        ReviewResponse rr = new ReviewResponse();
+                        rr.id = rv.getId();
+                        rr.freelancerId = rv.getFreelancer() != null ? rv.getFreelancer().getFreelancerId() : null;
+                        if (rv.getClient() != null) {
+                            rr.clientId = rv.getClient().getClientId();
+                            if (rv.getClient().getUser() != null) {
+                                String cf = rv.getClient().getUser().getFirstName() != null
+                                        ? rv.getClient().getUser().getFirstName()
+                                        : "";
+                                String cl = rv.getClient().getUser().getLastName() != null
+                                        ? rv.getClient().getUser().getLastName()
+                                        : "";
+                                rr.clientName = (cf + " " + cl).trim();
+                            }
+                        }
+                        rr.rating = rv.getRating();
+                        rr.feedback = rv.getFeedback();
+                        rr.createdAt = rv.getCreatedAt();
+                        return rr;
+                    }).collect(java.util.stream.Collectors.toList());
+                }
+            }
+        }
         return r;
     }
 

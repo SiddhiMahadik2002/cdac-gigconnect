@@ -5,6 +5,8 @@ import com.project.freelance.freelancing_platform.dto.order.OrderResponse;
 import com.project.freelance.freelancing_platform.dto.order.PurchaseGigRequest;
 import com.project.freelance.freelancing_platform.dto.order.UpdateOrderStatusRequest;
 import com.project.freelance.freelancing_platform.model.*;
+import com.project.freelance.freelancing_platform.model.Review;
+import com.project.freelance.freelancing_platform.repository.ReviewRepository;
 import com.project.freelance.freelancing_platform.proposal.Proposal;
 import com.project.freelance.freelancing_platform.proposal.ProposalRepository;
 import com.project.freelance.freelancing_platform.proposal.ProposalStatus;
@@ -37,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final ClientRepository clientRepository;
     private final FreelancerProfileRepository freelancerRepository;
     private final RequirementRepository requirementRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public OrderResponse purchaseGig(Long gigId, Long clientId, PurchaseGigRequest request) {
@@ -366,6 +369,17 @@ public class OrderServiceImpl implements OrderService {
                 order.setCompletedAt(OffsetDateTime.now());
                 if (request.getClientNotes() != null) {
                     order.setClientNotes(request.getClientNotes());
+                }
+                // Persist review when client approves and provides rating/feedback
+                if (this.reviewRepository != null) {
+                    if ((request.getRating() != null) || (request.getClientNotes() != null && !request.getClientNotes().trim().isEmpty())) {
+                        Review rev = new Review();
+                        rev.setFreelancer(order.getFreelancer());
+                        rev.setClient(order.getClient());
+                        rev.setRating(request.getRating());
+                        rev.setFeedback(request.getClientNotes());
+                        reviewRepository.save(rev);
+                    }
                 }
                 break;
 

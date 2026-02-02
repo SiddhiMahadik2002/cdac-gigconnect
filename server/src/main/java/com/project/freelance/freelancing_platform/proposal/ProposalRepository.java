@@ -26,4 +26,11 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long> {
     @Modifying
     @Query("UPDATE Proposal p SET p.status = 'REJECTED' WHERE p.requirement.id = :requirementId AND p.id != :acceptedProposalId AND p.status = 'PENDING'")
     int rejectOtherProposalsForRequirement(@Param("requirementId") Long requirementId, @Param("acceptedProposalId") Long acceptedProposalId);
+
+    @Query("SELECT AVG(p.rating) FROM Proposal p WHERE p.freelancer.freelancerId = :freelancerId AND p.status = com.project.freelance.freelancing_platform.proposal.ProposalStatus.COMPLETED AND p.rating IS NOT NULL")
+    Double findAverageRatingByFreelancerId(@Param("freelancerId") Long freelancerId);
+
+    List<Proposal> findTop5ByFreelancerFreelancerIdAndClientFeedbackIsNotNullOrderByCompletedAtDesc(Long freelancerId);
+
+    long countByFreelancerFreelancerIdAndRatingIsNotNull(Long freelancerId);
 }

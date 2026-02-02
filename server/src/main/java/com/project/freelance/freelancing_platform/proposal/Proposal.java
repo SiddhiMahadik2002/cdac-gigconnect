@@ -44,6 +44,8 @@ public class Proposal {
 
     private OffsetDateTime completedAt; // When client approved completion
 
+    private Integer rating; // Optional client rating (1-5)
+
     // getters and setters
     public Long getId() {
         return id;
@@ -139,5 +141,13 @@ public class Proposal {
 
     public void setCompletedAt(OffsetDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }

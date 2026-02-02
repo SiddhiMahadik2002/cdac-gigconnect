@@ -17,5 +17,6 @@ public interface GigService {
 
     Page<Gig> getGigsByFreelancer(Long freelancerId, Pageable pageable);
 
-    Page<Gig> searchGigs(String skill, java.math.BigDecimal minPrice, java.math.BigDecimal maxPrice, Pageable pageable);
+    Page<Gig> searchGigs(String search, java.math.BigDecimal minPrice, java.math.BigDecimal maxPrice,
+            Pageable pageable);
 }

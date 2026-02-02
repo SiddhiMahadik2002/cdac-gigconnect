@@ -222,12 +222,17 @@ public class OrderController {
     @ApiResponse(responseCode = "403", description = "Access denied - CLIENT role required")
     public ResponseEntity<OrderResponse> approveWork(
             @PathVariable Long orderId,
-            @RequestBody(required = false) String clientNotes) {
+            @RequestBody(required = false) UpdateOrderStatusRequest request) {
 
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = (User) principal;
 
-        OrderResponse response = orderService.approveWork(orderId, user.getUserId(), clientNotes);
+        // If client sent plain text (old clients), support backwards-compatibility
+        if (request == null) {
+            request = UpdateOrderStatusRequest.builder().status(Order.OrderStatus.COMPLETED).build();
+        }
+
+        OrderResponse response = orderService.updateOrderStatus(orderId, user.getUserId(), request);
         return ResponseEntity.ok(response);
     }
 
