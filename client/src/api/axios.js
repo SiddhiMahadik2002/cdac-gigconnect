@@ -18,7 +18,11 @@ const apiClient = axios.create({
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+        // SAFETY: STORAGE_KEYS.AUTH_TOKEN may be undefined in some environments;
+        // fall back to the legacy 'auth_token' key so we don't call
+        // localStorage.getItem(undefined).
+        const tokenKey = STORAGE_KEYS.AUTH_TOKEN || 'auth_token';
+        const token = localStorage.getItem(tokenKey);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -39,7 +43,8 @@ apiClient.interceptors.response.use(
         // perform a global navigation here. Let route-level guards (or
         // callers) decide how to handle unauthenticated users.
         if (error.response?.status === 401) {
-            localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+            const tokenKey = STORAGE_KEYS.AUTH_TOKEN || 'auth_token';
+            localStorage.removeItem(tokenKey);
             localStorage.removeItem(STORAGE_KEYS.USER_DATA);
         }
 

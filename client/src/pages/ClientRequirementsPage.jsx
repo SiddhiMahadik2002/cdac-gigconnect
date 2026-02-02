@@ -6,6 +6,7 @@ import { USER_ROLES } from '../utils/constants';
 import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
 import styles from './ClientRequirementsPage.module.css';
+import { NoteIcon, SearchIcon } from '../components/icons/Icons.jsx';
 
 export function ClientRequirementsPage() {
     const { user, role } = useAuth();
@@ -112,7 +113,7 @@ export function ClientRequirementsPage() {
 
                 {requirements.length === 0 ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.emptyIcon}>📝</div>
+                        <div className={styles.emptyIcon}><NoteIcon /></div>
                         <h3>No Requirements Posted</h3>
                         <p>
                             Start by posting your first project requirement to receive proposals from talented freelancers.
@@ -123,7 +124,7 @@ export function ClientRequirementsPage() {
                     </div>
                 ) : filteredRequirements.length === 0 ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.emptyIcon}>🔍</div>
+                        <div className={styles.emptyIcon}><SearchIcon /></div>
                         <h3>No {filter} Requirements</h3>
                         <p>
                             No requirements found with the current filter. Try selecting a different status.

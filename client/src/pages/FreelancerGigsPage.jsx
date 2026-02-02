@@ -5,7 +5,9 @@ import { getGigsByFreelancer, deleteGig } from '../api/gig.api.js';
 import Button from '../components/common/Button.jsx';
 import Loader from '../components/common/Loader.jsx';
 import { formatCurrency } from '../utils/nameMapper.js';
+import Modal from '../components/common/Modal.jsx';
 import styles from './FreelancerGigsPage.module.css';
+import { ChartIcon, PackageIcon, VisibilityIcon, EditIcon, DeleteIcon } from '../components/icons/Icons.jsx';
 
 const FreelancerGigsPage = () => {
   const { user } = useAuth();
@@ -13,9 +15,10 @@ const FreelancerGigsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deletingGigId, setDeletingGigId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [gigToDelete, setGigToDelete] = useState(null);
 
-  useEffect(() => {
-    const fetchGigs = async () => {
+  const fetchGigs = async () => {
       try {
         setLoading(true);
         setError('');
@@ -24,29 +27,12 @@ const FreelancerGigsPage = () => {
         // According to API docs, there's no specific endpoint for freelancer's gigs
         // so we'll use a direct fetch approach and fall back to mock data
         try {
-          const response = await fetch('/api/v1/gigs/me', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-
-          if (response.ok) {
-            const gigData = await response.json();
-            // Handle both array and paginated response formats
-            const gigs = Array.isArray(gigData) ? gigData : (gigData.content || []);
-            setGigs(gigs);
-          } else if (response.status === 404) {
-            // API endpoint not implemented yet, use mock data
-            console.log('Gigs API not available, using mock data');
-            useMockData();
-          } else {
-            throw new Error(`Failed to fetch gigs: ${response.status}`);
-          }
+          // Use api helper which respects API_BASE_URL (backend host)
+          const result = await getGigsByFreelancer(user.userId || user.id);
+          const gigs = Array.isArray(result) ? result : (result.content || []);
+          setGigs(gigs);
         } catch (apiError) {
           console.log('API not available, using mock data:', apiError);
-          // Fall back to mock data when API is not available
           useMockData();
         }
 
@@ -106,33 +92,30 @@ const FreelancerGigsPage = () => {
       setGigs(mockGigs);
     };
 
+  useEffect(() => {
     if (user) {
       fetchGigs();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const handleDeleteGig = async (gigId) => {
-    if (!window.confirm('Are you sure you want to delete this gig? This action cannot be undone.')) {
-      return;
-    }
+  const handleDeleteGig = (gigId) => {
+    // Open confirmation modal
+    setGigToDelete(gigId);
+    setConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    const gigId = gigToDelete;
+    if (!gigId) return;
 
     try {
       setDeletingGigId(gigId);
-
-      // Use proper API endpoint for deleting gigs
-      const response = await fetch(`/api/v1/gigs/${gigId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (response.ok) {
-        setGigs(gigs.filter(gig => gig.id !== gigId));
-      } else {
-        throw new Error(`Failed to delete gig: ${response.status}`);
-      }
+      await deleteGig(gigId);
+      // Re-fetch gigs after successful delete
+      await fetchGigs();
+      setConfirmOpen(false);
+      setGigToDelete(null);
     } catch (err) {
       console.error('Error deleting gig:', err);
       setError('Failed to delete gig. Please try again.');
@@ -141,46 +124,7 @@ const FreelancerGigsPage = () => {
     }
   };
 
-  const toggleGigStatus = async (gigId) => {
-    const gig = gigs.find(g => g.id === gigId);
-    if (!gig) return;
-
-    try {
-      // Update gig status using API
-      const newStatus = gig.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-      const response = await fetch(`/api/v1/gigs/${gigId}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...gig,
-          status: newStatus
-        })
-      });
-
-      if (response.ok) {
-        setGigs(gigs.map(g =>
-          g.id === gigId ? { ...g, status: newStatus } : g
-        ));
-      } else {
-        console.warn('Failed to update gig status via API, updating locally');
-        // Update locally if API call fails
-        setGigs(gigs.map(g =>
-          g.id === gigId ? { ...g, status: newStatus } : g
-        ));
-      }
-    } catch (err) {
-      console.error('Error updating gig status:', err);
-      // Update locally if API call fails
-      const newStatus = gig.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-      setGigs(gigs.map(g =>
-        g.id === gigId ? { ...g, status: newStatus } : g
-      ));
-    }
-  };
-
+  
   if (loading) {
     return <Loader centered fullHeight text="Loading your gigs..." />;
   }
@@ -202,6 +146,28 @@ const FreelancerGigsPage = () => {
           </div>
         </div>
 
+        {/* Confirmation modal for deleting a gig */}
+        <Modal
+          isOpen={confirmOpen}
+          onClose={() => { setConfirmOpen(false); setGigToDelete(null); }}
+          title="Confirm delete"
+          size="small"
+        >
+          <p>Are you sure you want to delete this gig? This action cannot be undone.</p>
+          <div className={styles.modalActions}>
+            <Button variant="ghost" onClick={() => { setConfirmOpen(false); setGigToDelete(null); }}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+              loading={deletingGigId === gigToDelete}
+              disabled={deletingGigId === gigToDelete}
+            >
+              Delete
+            </Button>
+          </div>
+        </Modal>
         {error && (
           <div className={styles.error}>
             {error}
@@ -210,7 +176,7 @@ const FreelancerGigsPage = () => {
 
         {gigs.length === 0 ? (
           <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>🎯</div>
+            <div className={styles.emptyIcon}><ChartIcon /></div>
             <h3>No gigs yet</h3>
             <p>Create your first gig to start showcasing your skills and attracting clients.</p>
             <Link to="/freelancer/gigs/new">
@@ -246,7 +212,7 @@ const FreelancerGigsPage = () => {
                       <img src={gig.images[0]} alt={gig.title} />
                     ) : (
                       <div className={styles.imagePlaceholder}>
-                        <span>🎯</span>
+                        <ChartIcon />
                       </div>
                     )}
                     <div className={`${styles.statusBadge} ${styles[gig.status.toLowerCase()]}`}>
@@ -261,10 +227,12 @@ const FreelancerGigsPage = () => {
 
                       <div className={styles.gigMeta}>
                         <div className={styles.gigPrice}>{formatCurrency(gig.fixedPrice)}</div>
-                        <div className={styles.gigStats}>
-                          <span>👀 {gig.views || 0} views</span>
-                          <span>📦 {gig.orders || 0} orders</span>
-                        </div>
+                        {(gig.views > 0 || gig.orders > 0) && (
+                          <div className={styles.gigStats}>
+                            {gig.views > 0 && <span><VisibilityIcon /> {gig.views} views</span>}
+                            {gig.orders > 0 && <span><PackageIcon /> {gig.orders} orders</span>}
+                          </div>
+                        )}
                       </div>
 
                       <div className={styles.skillTags}>
@@ -304,18 +272,12 @@ const FreelancerGigsPage = () => {
 
                     <div className={styles.gigActions}>
                       <Link to={`/gigs/${gig.id}`}>
-                        <Button variant="ghost" size="small">👀 View</Button>
+                        <Button variant="ghost" size="small"><VisibilityIcon /> View</Button>
                       </Link>
                       <Link to={`/freelancer/gigs/edit/${gig.id}`}>
-                        <Button variant="outline" size="small">✏️ Edit</Button>
+                        <Button variant="outline" size="small"><EditIcon /> Edit</Button>
                       </Link>
-                      <Button
-                        variant="ghost"
-                        size="small"
-                        onClick={() => toggleGigStatus(gig.id)}
-                      >
-                        {gig.status === 'ACTIVE' ? '⏸️ Pause' : '▶️ Activate'}
-                      </Button>
+                      {/* Pause/Activate removed per request */}
                       <Button
                         variant="ghost"
                         size="small"
@@ -324,7 +286,7 @@ const FreelancerGigsPage = () => {
                         disabled={deletingGigId === gig.id}
                         style={{ color: 'var(--error)' }}
                       >
-                        🗑️ Delete
+                        <DeleteIcon /> Delete
                       </Button>
                     </div>
                   </div>

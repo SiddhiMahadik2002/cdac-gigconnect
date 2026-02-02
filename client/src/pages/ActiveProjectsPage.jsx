@@ -16,6 +16,7 @@ import {
   getStatusClassName
 } from '../utils/statusHelpers.js';
 import styles from './ActiveProjectsPage.module.css';
+import { WarningIcon, MoneyIcon, CalendarIcon, PersonIcon, NoteIcon, InfoIcon, ChatIcon } from '../components/icons/Icons.jsx';
 
 const ActiveProjectsPage = () => {
   const { user } = useAuth();
@@ -183,7 +184,7 @@ const ActiveProjectsPage = () => {
 
         {error && (
           <div className={styles.errorAlert}>
-            <span className={styles.errorIcon}>⚠️</span>
+            <span className={styles.errorIcon}><WarningIcon /></span>
             {error}
           </div>
         )}
@@ -243,7 +244,7 @@ const ActiveProjectsPage = () => {
                   {project.status === 'REVISION_REQUESTED' && project.rejectionReason && (
                     <div className={styles.feedbackBox}>
                       <div className={styles.feedbackHeader}>
-                        <span className={styles.feedbackIcon}>💬</span>
+                        <span className={styles.feedbackIcon}><ChatIcon /></span>
                         <strong>Client Feedback:</strong>
                       </div>
                       <p className={styles.feedbackText}>{project.rejectionReason}</p>
@@ -254,7 +255,7 @@ const ActiveProjectsPage = () => {
                   {project.status === 'COMPLETION_REQUESTED' && (
                     <div className={styles.statusBox}>
                       <div className={styles.statusBoxHeader}>
-                        <span className={styles.statusBoxIcon}>⏳</span>
+                        <span className={styles.statusBoxIcon}><InfoIcon /></span>
                         <strong>Completion Submitted</strong>
                       </div>
                       <p className={styles.statusBoxText}>
@@ -273,14 +274,14 @@ const ActiveProjectsPage = () => {
 
                   <div className={styles.projectMeta}>
                     <div className={styles.projectMetaItem}>
-                      <span className={styles.metaIcon}>💰</span>
+                      <span className={styles.metaIcon}><MoneyIcon /></span>
                       <div>
                         <span className={styles.metaLabel}>Project Value</span>
                         <span className={styles.metaValue}>{formatCurrency(project.price)}</span>
                       </div>
                     </div>
                     <div className={styles.projectMetaItem}>
-                      <span className={styles.metaIcon}>📅</span>
+                      <span className={styles.metaIcon}><CalendarIcon /></span>
                       <div>
                         <span className={styles.metaLabel}>Started</span>
                         <span className={styles.metaValue}>
@@ -293,7 +294,7 @@ const ActiveProjectsPage = () => {
                       </div>
                     </div>
                     <div className={styles.projectMetaItem}>
-                      <span className={styles.metaIcon}>👤</span>
+                      <span className={styles.metaIcon}><PersonIcon /></span>
                       <div>
                         <span className={styles.metaLabel}>Client</span>
                         <span className={styles.metaValue}>{project.clientName}</span>
@@ -325,7 +326,7 @@ const ActiveProjectsPage = () => {
                     {/* Already submitted for approval */}
                     {project.status === 'COMPLETION_REQUESTED' && (
                       <Button variant="outline" size="small" disabled>
-                        ⏳ {statusInfo.label}
+                        <InfoIcon /> {statusInfo.label}
                       </Button>
                     )}
                   </div>
@@ -335,7 +336,7 @@ const ActiveProjectsPage = () => {
           </div>
         ) : (
           <div className={styles.emptyState}>
-            <div className={styles.emptyStateIcon}>📋</div>
+            <div className={styles.emptyStateIcon}><NoteIcon /></div>
             <h3 className={styles.emptyStateTitle}>No {filter !== 'ALL' ? filter.replace('_', ' ').toLowerCase() : ''} Projects</h3>
             <p className={styles.emptyStateText}>
               {filter === 'ALL'
@@ -390,7 +391,7 @@ const ActiveProjectsPage = () => {
             </div>
 
             <div className={styles.infoBox}>
-              <span className={styles.infoIcon}>ℹ️</span>
+              <span className={styles.infoIcon}><InfoIcon /></span>
               <div>
                 <strong>What happens next?</strong>
                 <p>The client will be notified and can either approve your work or request revisions. You'll be notified of their decision.</p>

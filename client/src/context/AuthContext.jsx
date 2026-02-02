@@ -161,7 +161,20 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
+        // If the provider is missing (e.g., during tests or mis-wiring),
+        // return a safe default instead of throwing so the app doesn't crash.
+        // Components can still handle the unauthenticated state.
+        return {
+            isAuthenticated: false,
+            user: null,
+            role: null,
+            loading: false,
+            error: null,
+            login: async () => { },
+            logout: () => { },
+            clearError: () => { },
+        };
     }
+
     return context;
 };

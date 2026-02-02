@@ -8,9 +8,11 @@ import Input from '../components/common/Input.jsx';
 import TextArea from '../components/common/TextArea.jsx';
 import Button from '../components/common/Button.jsx';
 import Loader from '../components/common/Loader.jsx';
-import { parseFullName, toFullName } from '../utils/nameMapper.js';
+import { PersonIcon, FlashIcon, LinkIcon, CodeIcon, BrushIcon, WarningIcon, CheckIcon } from '../components/icons/Icons.jsx';
+import { parseFullName, toFullName, formatCurrency } from '../utils/nameMapper.js';
 import { COMMON_SKILLS } from '../utils/constants.js';
 import styles from './FreelancerProfilePage.module.css';
+import { ChartIcon, CloseIcon } from '../components/icons/Icons.jsx';
 
 // Validation schema
 const profileSchema = z.object({
@@ -19,7 +21,6 @@ const profileSchema = z.object({
   title: z.string().min(1, 'Professional title is required'),
   bio: z.string().min(50, 'Bio must be at least 50 characters').max(500, 'Bio must be less than 500 characters'),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
-  hourlyRate: z.number().min(5, 'Hourly rate must be at least $5').max(500, 'Hourly rate must be less than $500').optional(),
   linkedinUrl: z.string().url('Invalid LinkedIn URL').optional().or(z.literal('')),
   githubUrl: z.string().url('Invalid GitHub URL').optional().or(z.literal('')),
   portfolioUrl: z.string().url('Invalid Portfolio URL').optional().or(z.literal('')),
@@ -32,6 +33,7 @@ const FreelancerProfilePage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [skillInput, setSkillInput] = useState('');
+  const [profileState, setProfileState] = useState(null);
 
   const {
     register,
@@ -46,43 +48,39 @@ const FreelancerProfilePage = () => {
   const watchedSkills = watch('skills', []);
 
   useEffect(() => {
+    // Derive a robust user id from possible shapes returned by the backend
+    const userId = user?.userId ?? user?.id ?? user?.freelancerId ?? user?.sub;
+
     const loadProfile = async () => {
       try {
         setLoading(true);
 
-        // Initialize with current user data
+        // Initialize with current user data and fetch full freelancer profile
         const { firstName, lastName } = parseFullName(user?.fullName || '');
-
-        // Mock profile data for demo
-        const mockProfile = {
-          title: 'Full Stack Developer',
-          bio: 'Passionate full-stack developer with 5+ years of experience building web applications. I specialize in React, Node.js, and modern web technologies.',
-          skills: ['JavaScript', 'React', 'Node.js', 'MongoDB'],
-          hourlyRate: 45,
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: ''
-        };
-
         setValue('firstName', firstName);
         setValue('lastName', lastName);
-        setValue('title', mockProfile.title);
-        setValue('bio', mockProfile.bio);
-        setValue('skills', mockProfile.skills);
-        setValue('hourlyRate', mockProfile.hourlyRate);
-        setValue('linkedinUrl', mockProfile.linkedinUrl);
-        setValue('githubUrl', mockProfile.githubUrl);
-        setValue('portfolioUrl', mockProfile.portfolioUrl);
 
-        // Uncomment when API is ready
-        // const profile = await getFreelancerProfile(user.id);
-        // setValue('title', profile.title || '');
-        // setValue('bio', profile.bio || '');
-        // setValue('skills', profile.skills || []);
-        // setValue('hourlyRate', profile.hourlyRate || '');
-        // setValue('linkedinUrl', profile.linkedinUrl || '');
-        // setValue('githubUrl', profile.githubUrl || '');
-        // setValue('portfolioUrl', profile.portfolioUrl || '');
+        // Fetch the freelancer profile from backend
+        const profile = await getFreelancerProfile(userId);
+
+        setValue('title', profile.title || '');
+        setValue('bio', profile.description || '');
+
+        // Profile.skills may be a comma-separated string or an array
+        let skillsArray = [];
+        if (Array.isArray(profile.skills)) {
+          skillsArray = profile.skills;
+        } else if (typeof profile.skills === 'string') {
+          skillsArray = profile.skills.split(',').map(s => s.trim()).filter(Boolean);
+        }
+        setValue('skills', skillsArray || []);
+
+        setValue('linkedinUrl', profile.linkedin || profile.linkedinUrl || '');
+        setValue('githubUrl', profile.github || profile.githubUrl || '');
+        setValue('portfolioUrl', profile.portfolio || profile.portfolioUrl || '');
+
+        // Save the raw profile for display (ratings, reviews, earnings)
+        setProfileState(profile);
 
       } catch (err) {
         console.error('Error loading profile:', err);
@@ -92,7 +90,7 @@ const FreelancerProfilePage = () => {
       }
     };
 
-    if (user) {
+    if (userId) {
       loadProfile();
     }
   }, [user, setValue]);
@@ -108,7 +106,6 @@ const FreelancerProfilePage = () => {
         title: data.title,
         bio: data.bio,
         skills: data.skills,
-        hourlyRate: data.hourlyRate,
         linkedinUrl: data.linkedinUrl,
         githubUrl: data.githubUrl,
         portfolioUrl: data.portfolioUrl,
@@ -119,12 +116,11 @@ const FreelancerProfilePage = () => {
         ...user,
         fullName: profileData.fullName
       };
-      await login(updatedUser, localStorage.getItem('auth_token'));
+      // Send update to backend, then update auth context
+      await updateFreelancerProfile(profileData);
+      await login(updatedUser);
 
       setSuccess('Profile updated successfully!');
-
-      // Uncomment when API is ready
-      // await updateFreelancerProfile(profileData);
 
     } catch (err) {
       console.error('Error updating profile:', err);
@@ -181,20 +177,20 @@ const FreelancerProfilePage = () => {
               <p className={styles.profileEmail}>{user?.email}</p>
             </div>
           </div>
-          
+
           <div className={styles.profileStats}>
             <div className={styles.statItem}>
-              <div className={styles.statValue}>4.9</div>
+              <div className={styles.statValue}>{profileState?.averageRating ?? '—'}</div>
               <div className={styles.statLabel}>Rating</div>
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
-              <div className={styles.statValue}>28</div>
-              <div className={styles.statLabel}>Projects</div>
+              <div className={styles.statValue}>{profileState?.ratingCount ?? (profileState?.recentReviews?.length ?? 0)}</div>
+              <div className={styles.statLabel}>Reviews</div>
             </div>
             <div className={styles.statDivider}></div>
             <div className={styles.statItem}>
-              <div className={styles.statValue}>$12.5k</div>
+              <div className={styles.statValue}>{formatCurrency(profileState?.totalEarnings || 0)}</div>
               <div className={styles.statLabel}>Earned</div>
             </div>
           </div>
@@ -202,14 +198,14 @@ const FreelancerProfilePage = () => {
 
         {error && (
           <div className={styles.alert + ' ' + styles.error}>
-            <span className={styles.alertIcon}>⚠️</span>
+            <span className={styles.alertIcon}><WarningIcon /></span>
             {error}
           </div>
         )}
 
         {success && (
           <div className={styles.alert + ' ' + styles.success}>
-            <span className={styles.alertIcon}>✓</span>
+            <span className={styles.alertIcon}><CheckIcon /></span>
             {success}
           </div>
         )}
@@ -221,7 +217,7 @@ const FreelancerProfilePage = () => {
               {/* Personal Information */}
               <div className={styles.section}>
                 <div className={styles.sectionHeader}>
-                  <div className={styles.sectionIcon}>👤</div>
+                  <div className={styles.sectionIcon}><PersonIcon /></div>
                   <div>
                     <h3 className={styles.sectionTitle}>Personal Information</h3>
                     <p className={styles.sectionDescription}>Your basic profile details</p>
@@ -269,23 +265,13 @@ const FreelancerProfilePage = () => {
                   size="large"
                 />
 
-                <Input
-                  label="Hourly Rate (USD)"
-                  type="number"
-                  {...register('hourlyRate', { valueAsNumber: true })}
-                  error={errors.hourlyRate?.message}
-                  disabled={saving}
-                  placeholder="45"
-                  min={5}
-                  max={500}
-                  helperText="Your preferred hourly rate"
-                />
+                {/* Hourly rate removed - feature not needed */}
               </div>
 
               {/* Skills */}
               <div className={styles.section}>
                 <div className={styles.sectionHeader}>
-                  <div className={styles.sectionIcon}>⚡</div>
+                  <div className={styles.sectionIcon}><FlashIcon /></div>
                   <div>
                     <h3 className={styles.sectionTitle}>Skills & Expertise</h3>
                     <p className={styles.sectionDescription}>Showcase what you're great at</p>
@@ -361,7 +347,7 @@ const FreelancerProfilePage = () => {
               {/* Social Links */}
               <div className={styles.section}>
                 <div className={styles.sectionHeader}>
-                  <div className={styles.sectionIcon}>🔗</div>
+                  <div className={styles.sectionIcon}><LinkIcon /></div>
                   <div>
                     <h3 className={styles.sectionTitle}>Social Links</h3>
                     <p className={styles.sectionDescription}>Connect your professional profiles</p>
@@ -375,7 +361,7 @@ const FreelancerProfilePage = () => {
                   error={errors.linkedinUrl?.message}
                   disabled={saving}
                   placeholder="https://linkedin.com/in/yourprofile"
-                  icon="🔗"
+                  icon={<LinkIcon />}
                 />
 
                 <Input
@@ -385,7 +371,7 @@ const FreelancerProfilePage = () => {
                   error={errors.githubUrl?.message}
                   disabled={saving}
                   placeholder="https://github.com/yourusername"
-                  icon="💻"
+                  icon={<CodeIcon />}
                 />
 
                 <Input
@@ -395,45 +381,11 @@ const FreelancerProfilePage = () => {
                   error={errors.portfolioUrl?.message}
                   disabled={saving}
                   placeholder="https://yourportfolio.com"
-                  icon="🎨"
+                  icon={<BrushIcon />}
                 />
               </div>
 
-              {/* Profile Completeness */}
-              <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <div className={styles.sectionIcon}>📊</div>
-                  <div>
-                    <h3 className={styles.sectionTitle}>Profile Strength</h3>
-                    <p className={styles.sectionDescription}>Complete your profile to get more visibility</p>
-                  </div>
-                </div>
 
-                <div className={styles.progressCard}>
-                  <div className={styles.progressHeader}>
-                    <span className={styles.progressLabel}>Profile Completion</span>
-                    <span className={styles.progressPercent}>75%</span>
-                  </div>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progressFill} style={{ width: '75%' }}></div>
-                  </div>
-                  
-                  <div className={styles.completionTips}>
-                    <div className={styles.tip}>
-                      <span className={styles.tipIcon}>✓</span>
-                      <span className={styles.tipText}>Added professional bio</span>
-                    </div>
-                    <div className={styles.tip}>
-                      <span className={styles.tipIcon}>✓</span>
-                      <span className={styles.tipText}>Set hourly rate</span>
-                    </div>
-                    <div className={styles.tip + ' ' + styles.tipIncomplete}>
-                      <span className={styles.tipIcon}>○</span>
-                      <span className={styles.tipText}>Add portfolio link</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 

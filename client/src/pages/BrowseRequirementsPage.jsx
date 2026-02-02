@@ -6,6 +6,7 @@ import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
 import { formatCurrency } from '../utils/nameMapper';
 import styles from './BrowseRequirementsPage.module.css';
+import { WarningIcon, NoteIcon, BriefcaseIcon, CalendarIcon } from '../components/icons/Icons.jsx';
 
 const BrowseRequirementsPage = () => {
   const { user } = useAuth();
@@ -32,7 +33,7 @@ const BrowseRequirementsPage = () => {
       };
 
       const data = await getAllRequirements(params);
-      
+
       // Handle paginated response
       setRequirements(data.content || []);
       setTotalPages(data.totalPages || 0);
@@ -96,7 +97,7 @@ const BrowseRequirementsPage = () => {
     const now = new Date();
     const diffTime = Math.abs(now - date);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
@@ -138,14 +139,14 @@ const BrowseRequirementsPage = () => {
 
         {error && (
           <div className={styles.error}>
-            <span>⚠️</span>
+            <span><WarningIcon /></span>
             {error}
           </div>
         )}
 
         {requirements.length === 0 ? (
           <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>📋</div>
+            <div className={styles.emptyIcon}><NoteIcon /></div>
             <h3>No requirements available</h3>
             <p>Check back later for new opportunities or create a gig to showcase your skills.</p>
             <Link to="/freelancer/gigs/new">
@@ -198,16 +199,16 @@ const BrowseRequirementsPage = () => {
                     <div className={styles.requirementMeta}>
                       {requirement.yoeRequired && (
                         <div className={styles.metaItem}>
-                          <span className={styles.metaIcon}>💼</span>
+                          <span className={styles.metaIcon}><BriefcaseIcon /></span>
                           <span>{requirement.yoeRequired}+ years experience</span>
                         </div>
                       )}
                       <div className={styles.metaItem}>
-                        <span className={styles.metaIcon}>📝</span>
+                        <span className={styles.metaIcon}><NoteIcon /></span>
                         <span>{requirement.totalProposals} proposals</span>
                       </div>
                       <div className={styles.metaItem}>
-                        <span className={styles.metaIcon}>⏰</span>
+                        <span className={styles.metaIcon}><CalendarIcon /></span>
                         <span>{formatDate(requirement.createdAt)}</span>
                       </div>
                     </div>

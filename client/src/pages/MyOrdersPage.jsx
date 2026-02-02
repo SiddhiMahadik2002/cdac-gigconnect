@@ -5,6 +5,7 @@ import { USER_ROLES, ORDER_STATUS } from '../utils/constants.js';
 import { formatCurrency } from '../utils/nameMapper.js';
 import Loader from '../components/common/Loader.jsx';
 import Button from '../components/common/Button.jsx';
+import { CheckIcon, RefreshIcon, PackageIcon, ChartIcon, NoteIcon, CloseIcon } from '../components/icons/Icons.jsx';
 import { Link } from 'react-router-dom';
 import styles from './MyOrdersPage.module.css';
 
@@ -70,12 +71,12 @@ const MyOrdersPage = () => {
 
     const getOrderStatusInfo = (status) => {
         const statusMap = {
-            [ORDER_STATUS.CONFIRMED]: { label: 'Confirmed', color: 'blue', icon: '✓' },
-            [ORDER_STATUS.IN_PROGRESS]: { label: 'In Progress', color: 'orange', icon: '🔄' },
-            [ORDER_STATUS.DELIVERED]: { label: 'Delivered', color: 'purple', icon: '📦' },
-            [ORDER_STATUS.REVISION_REQUESTED]: { label: 'Revision Requested', color: 'yellow', icon: '🔄' },
-            [ORDER_STATUS.COMPLETED]: { label: 'Completed', color: 'green', icon: '✅' },
-            [ORDER_STATUS.CANCELLED]: { label: 'Cancelled', color: 'red', icon: '❌' }
+            [ORDER_STATUS.CONFIRMED]: { label: 'Confirmed', color: 'blue', icon: <CheckIcon /> },
+            [ORDER_STATUS.IN_PROGRESS]: { label: 'In Progress', color: 'orange', icon: <RefreshIcon /> },
+            [ORDER_STATUS.DELIVERED]: { label: 'Delivered', color: 'purple', icon: <PackageIcon /> },
+            [ORDER_STATUS.REVISION_REQUESTED]: { label: 'Revision Requested', color: 'yellow', icon: <RefreshIcon /> },
+            [ORDER_STATUS.COMPLETED]: { label: 'Completed', color: 'green', icon: <CheckIcon /> },
+            [ORDER_STATUS.CANCELLED]: { label: 'Cancelled', color: 'red', icon: <CloseIcon /> }
         };
         return statusMap[status] || { label: 'Unknown', color: 'gray', icon: '?' };
     };
@@ -131,7 +132,7 @@ const MyOrdersPage = () => {
 
                 {orders.length === 0 && !loading ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.emptyIcon}>📋</div>
+                        <div className={styles.emptyIcon}><NoteIcon /></div>
                         <h3>No Orders Found</h3>
                         <p>
                             {role === USER_ROLES.CLIENT

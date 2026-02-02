@@ -14,16 +14,25 @@ export const parseFullName = (fullName) => {
 };
 
 // Format currency
-export const formatCurrency = (amount, currency = 'USD') => {
+export const formatCurrency = (amount, currency = 'INR') => {
+    const num = Number(amount) || 0;
+    if (currency === 'INR') {
+        const formatted = new Intl.NumberFormat('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(num);
+        return `Rs ${formatted}`;
+    }
+
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency,
-    }).format(amount);
+    }).format(num);
 };
 
 // Format date
 export const formatDate = (date) => {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat('en-IN', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',

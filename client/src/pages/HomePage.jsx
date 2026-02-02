@@ -6,12 +6,16 @@ import Button from '../components/common/Button.jsx';
 import Input from '../components/common/Input.jsx';
 import Loader from '../components/common/Loader.jsx';
 import styles from './HomePage.module.css';
+import { CodeIcon, BrushIcon, NoteIcon, ChartIcon, MovieIcon, MobileIcon } from '../components/icons/Icons.jsx';
+import { getMeta } from '../api/meta.api.js';
 
 const HomePage = () => {
     const navigate = useNavigate();
     const [featuredGigs, setFeaturedGigs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const [meta, setMeta] = useState(null);
+    const [metaLoading, setMetaLoading] = useState(true);
 
     useEffect(() => {
         const fetchFeaturedGigs = async () => {
@@ -29,6 +33,23 @@ const HomePage = () => {
         fetchFeaturedGigs();
     }, []);
 
+    useEffect(() => {
+        const fetchMeta = async () => {
+            try {
+                setMetaLoading(true);
+                const res = await getMeta();
+                setMeta(res.data || null);
+            } catch (err) {
+                console.error('Error fetching meta:', err);
+                setMeta(null);
+            } finally {
+                setMetaLoading(false);
+            }
+        };
+
+        fetchMeta();
+    }, []);
+
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
@@ -37,18 +58,25 @@ const HomePage = () => {
     };
 
     const categories = [
-        { name: 'Web Development', icon: '💻', description: 'Full-stack development, APIs, and more' },
-        { name: 'Graphic Design', icon: '🎨', description: 'Logos, branding, and creative designs' },
-        { name: 'Content Writing', icon: '✍️', description: 'Articles, blogs, and copywriting' },
-        { name: 'Digital Marketing', icon: '📊', description: 'SEO, social media, and advertising' },
-        { name: 'Video Editing', icon: '🎬', description: 'Professional video production' },
-        { name: 'Mobile Apps', icon: '📱', description: 'iOS and Android development' }
+        { name: 'Web Development', icon: <CodeIcon />, description: 'Full-stack development, APIs, and more' },
+        { name: 'Graphic Design', icon: <BrushIcon />, description: 'Logos, branding, and creative designs' },
+        { name: 'Content Writing', icon: <NoteIcon />, description: 'Articles, blogs, and copywriting' },
+        { name: 'Digital Marketing', icon: <ChartIcon />, description: 'SEO, social media, and advertising' },
+        { name: 'Video Editing', icon: <MovieIcon />, description: 'Professional video production' },
+        { name: 'Mobile Apps', icon: <MobileIcon />, description: 'iOS and Android development' }
     ];
 
+    const formatCount = (n) => {
+        if (n == null) return '-';
+        if (n >= 1000000) return `${Math.round(n / 1000000)}M+`;
+        if (n >= 1000) return `${Math.round(n / 1000)}K+`;
+        return `${n}`;
+    };
+
     const stats = [
-        { value: '50K+', label: 'Active Freelancers' },
-        { value: '100K+', label: 'Projects Completed' },
-        { value: '98%', label: 'Client Satisfaction' },
+        { value: metaLoading ? '…' : formatCount(meta?.activeFreelancers), label: 'Active Freelancers' },
+        { value: metaLoading ? '…' : formatCount(meta?.projectsCompleted), label: 'Projects Completed' },
+        { value: '100%', label: 'Secure Payments' },
         { value: '24/7', label: 'Support Available' }
     ];
 

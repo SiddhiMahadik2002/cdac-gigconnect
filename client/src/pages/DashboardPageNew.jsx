@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
 import styles from './DashboardPage.module.css';
+import { BriefcaseIcon, MoneyIcon, PackageIcon, StarIcon, FlashIcon, PersonIcon, ChartIcon, NoteIcon, WarningIcon } from '../components/icons/Icons.jsx';
+import { formatCurrency } from '../utils/nameMapper.js';
 
 const DashboardPage = () => {
     const { user } = useAuth();
@@ -36,16 +38,16 @@ const DashboardPage = () => {
                     {
                         id: 1,
                         type: 'order',
-                        icon: '💼',
+                        icon: <BriefcaseIcon />,
                         title: 'New order received',
                         description: 'React Development project from John Doe',
                         time: '2 hours ago',
-                        amount: '$299'
+                        amount: 'Rs 299'
                     },
                     {
                         id: 2,
                         type: 'gig',
-                        icon: '🚀',
+                        icon: <FlashIcon />,
                         title: 'Gig performance boost',
                         description: 'Your "Website Design" gig got 15 new views',
                         time: '1 day ago',
@@ -54,7 +56,7 @@ const DashboardPage = () => {
                     {
                         id: 3,
                         type: 'profile',
-                        icon: '👁️',
+                        icon: <PersonIcon />,
                         title: 'Profile viewed',
                         description: '5 potential clients viewed your profile',
                         time: '2 days ago',
@@ -89,7 +91,7 @@ const DashboardPage = () => {
                 <div className={styles.header}>
                     <div className={styles.headerContent}>
                         <h1 className={styles.title}>
-                            Welcome back, {user?.fullName?.split(' ')[0] || 'Freelancer'}! 👋
+                            Welcome back, {user?.fullName?.split(' ')[0] || 'Freelancer'}!
                         </h1>
                         <p className={styles.subtitle}>
                             Here's an overview of your freelancing journey and recent activity
@@ -104,7 +106,7 @@ const DashboardPage = () => {
 
                 {error && (
                     <div className={styles.errorAlert}>
-                        <span className={styles.errorIcon}>⚠️</span>
+                        <span className={styles.errorIcon}><WarningIcon /></span>
                         {error}
                     </div>
                 )}
@@ -112,7 +114,7 @@ const DashboardPage = () => {
                 {/* Stats Grid */}
                 <div className={styles.statsGrid}>
                     <div className={styles.statCard}>
-                        <div className={styles.statIcon}>💼</div>
+                        <div className={styles.statIcon}><BriefcaseIcon /></div>
                         <div className={styles.statContent}>
                             <h3 className={styles.statValue}>{stats?.totalGigs || 0}</h3>
                             <p className={styles.statLabel}>Total Gigs</p>
@@ -121,25 +123,27 @@ const DashboardPage = () => {
                     </div>
 
                     <div className={styles.statCard}>
-                        <div className={styles.statIcon}>💰</div>
+                        <div className={styles.statIcon}><MoneyIcon /></div>
                         <div className={styles.statContent}>
-                            <h3 className={styles.statValue}>${stats?.totalEarnings || 0}</h3>
+                            <h3 className={styles.statValue}>{formatCurrency(stats?.totalEarnings || 0)}</h3>
                             <p className={styles.statLabel}>Total Earnings</p>
-                            <span className={styles.statSubtext}>+${stats?.thisMonthEarnings || 0} this month</span>
+                            <span className={styles.statSubtext}>+{formatCurrency(stats?.thisMonthEarnings || 0)} this month</span>
                         </div>
                     </div>
 
-                    <div className={styles.statCard}>
-                        <div className={styles.statIcon}>📦</div>
-                        <div className={styles.statContent}>
-                            <h3 className={styles.statValue}>{stats?.totalOrders || 0}</h3>
-                            <p className={styles.statLabel}>Total Orders</p>
-                            <span className={styles.statSubtext}>{stats?.activeOrders || 0} active</span>
+                    {stats?.totalOrders > 0 && (
+                        <div className={styles.statCard}>
+                            <div className={styles.statIcon}><PackageIcon /></div>
+                            <div className={styles.statContent}>
+                                <h3 className={styles.statValue}>{stats?.totalOrders || 0}</h3>
+                                <p className={styles.statLabel}>Total Orders</p>
+                                <span className={styles.statSubtext}>{stats?.activeOrders || 0} active</span>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className={styles.statCard}>
-                        <div className={styles.statIcon}>⭐</div>
+                        <div className={styles.statIcon}><StarIcon /></div>
                         <div className={styles.statContent}>
                             <h3 className={styles.statValue}>{stats?.averageRating || 0}</h3>
                             <p className={styles.statLabel}>Avg Rating</p>
@@ -153,7 +157,7 @@ const DashboardPage = () => {
                     <h2 className={styles.sectionTitle}>Quick Actions</h2>
                     <div className={styles.quickActionsGrid}>
                         <Link to="/freelancer/gigs/new" className={styles.quickAction}>
-                            <div className={styles.quickActionIcon}>🎯</div>
+                            <div className={styles.quickActionIcon}><ChartIcon /></div>
                             <div className={styles.quickActionContent}>
                                 <h3>Create New Gig</h3>
                                 <p>Showcase your skills and attract clients</p>
@@ -161,7 +165,7 @@ const DashboardPage = () => {
                         </Link>
 
                         <Link to="/freelancer/gigs" className={styles.quickAction}>
-                            <div className={styles.quickActionIcon}>⚙️</div>
+                            <div className={styles.quickActionIcon}><FlashIcon /></div>
                             <div className={styles.quickActionContent}>
                                 <h3>Manage Gigs</h3>
                                 <p>Edit, update, or delete your gigs</p>
@@ -169,7 +173,7 @@ const DashboardPage = () => {
                         </Link>
 
                         <Link to="/freelancer/profile" className={styles.quickAction}>
-                            <div className={styles.quickActionIcon}>👤</div>
+                            <div className={styles.quickActionIcon}><PersonIcon /></div>
                             <div className={styles.quickActionContent}>
                                 <h3>Update Profile</h3>
                                 <p>Keep your profile fresh and complete</p>
@@ -177,7 +181,7 @@ const DashboardPage = () => {
                         </Link>
 
                         <a href="#" className={styles.quickAction} onClick={(e) => { e.preventDefault(); alert('Analytics coming soon!'); }}>
-                            <div className={styles.quickActionIcon}>📊</div>
+                            <div className={styles.quickActionIcon}><ChartIcon /></div>
                             <div className={styles.quickActionContent}>
                                 <h3>View Analytics</h3>
                                 <p>Track your performance and growth</p>
@@ -207,7 +211,7 @@ const DashboardPage = () => {
                                 ))
                             ) : (
                                 <div className={styles.emptyActivity}>
-                                    <div className={styles.emptyIcon}>📝</div>
+                                    <div className={styles.emptyIcon}><NoteIcon /></div>
                                     <h3>No recent activity</h3>
                                     <p>Start creating gigs to see your activity here</p>
                                 </div>

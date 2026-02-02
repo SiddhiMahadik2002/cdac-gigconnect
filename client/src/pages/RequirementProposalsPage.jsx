@@ -321,12 +321,12 @@ function ProposalCard({ proposal, onAccept, onPaymentSuccess, onPaymentFailure, 
             )}
 
             <div className={styles.proposalActions}>
-                <Link
+                {/* <Link
                     to={`/freelancer/${proposal.freelancer?.id}`}
                     className={styles.viewProfileLink}
                 >
                     View Profile
-                </Link>
+                </Link> */}
 
                 {canAccept && (
                     <div className={styles.paymentSection}>

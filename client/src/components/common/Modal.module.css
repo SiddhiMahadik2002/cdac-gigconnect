@@ -42,6 +42,16 @@
     max-width: 400px;
 }
 
+/* Tighter spacing for small modals and general body/button layout */
+.modalContent.small .modalHeader,
+.modalContent.small .modalBody {
+    padding: 16px;
+}
+
+.modalHeader {
+    padding: 20px;
+}
+
 @keyframes slideUp {
     from {
         transform: translateY(20px);
@@ -87,5 +97,17 @@
 }
 
 .modalBody {
-    padding: 24px;
+    padding: 20px 24px;
+    color: #374151;
+}
+
+.modalBody p {
+    margin: 0 0 12px 0;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
 }

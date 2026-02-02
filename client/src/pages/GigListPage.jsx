@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Input from '../components/common/Input.jsx';
 import Button from '../components/common/Button.jsx';
@@ -22,20 +22,43 @@ const GigListPage = () => {
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
   const [skill, setSkill] = useState(searchParams.get('skill') || '');
+  const [category, setCategory] = useState(searchParams.get('category') || '');
 
-  // Debounced search function
-  const debouncedSearch = debounce((query) => {
-    const params = new URLSearchParams(searchParams);
-    if (query) {
-      params.set('search', query);
+  // Debounced price values to avoid fetching on every keystroke
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState(minPrice);
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState(maxPrice);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedMinPrice(minPrice), 500);
+    return () => clearTimeout(t);
+  }, [minPrice]);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedMaxPrice(maxPrice), 500);
+    return () => clearTimeout(t);
+  }, [maxPrice]);
+
+  // Debounced query state: update this after a short delay to avoid updating the URL on every keystroke
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(searchQuery), 500);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
+
+  // Sync debounced query to URL search params (single place where we call setSearchParams)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (debouncedQuery) {
+      params.set('search', debouncedQuery);
     } else {
       params.delete('search');
     }
     params.delete('page');
     setSearchParams(params);
-  }, 500);
+  }, [debouncedQuery, setSearchParams]);
 
-  // Fetch gigs effect
+  // Fetch gigs effect (use debouncedQuery to avoid fetching on every keystroke)
   useEffect(() => {
     const fetchGigs = async () => {
       try {
@@ -45,10 +68,11 @@ const GigListPage = () => {
         const params = {
           page: currentPage, // Our API handler will convert to 0-based
           size: PAGINATION.DEFAULT_PAGE_SIZE,
-          ...(searchQuery && { search: searchQuery }),
-          ...(minPrice && { minPrice: parseFloat(minPrice) }),
-          ...(maxPrice && { maxPrice: parseFloat(maxPrice) }),
+          ...(debouncedQuery && { search: debouncedQuery }),
+          ...(debouncedMinPrice && { minPrice: parseFloat(debouncedMinPrice) }),
+          ...(debouncedMaxPrice && { maxPrice: parseFloat(debouncedMaxPrice) }),
           ...(skill && { skill }),
+          ...(category && { category }),
         };
 
         const response = await getGigs(params);
@@ -63,22 +87,25 @@ const GigListPage = () => {
     };
 
     fetchGigs();
-  }, [searchQuery, minPrice, maxPrice, skill, currentPage]);
+  }, [debouncedQuery, debouncedMinPrice, debouncedMaxPrice, skill, currentPage, category]);
 
   // Handle search input change
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
-    debouncedSearch(value);
   };
 
   // Handle filter application
   const handleApplyFilters = () => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
     if (searchQuery) params.set('search', searchQuery);
+    else params.delete('search');
     if (minPrice) params.set('minPrice', minPrice);
+    else params.delete('minPrice');
     if (maxPrice) params.set('maxPrice', maxPrice);
+    else params.delete('maxPrice');
     if (skill) params.set('skill', skill);
+    else params.delete('skill');
 
     setSearchParams(params);
     setCurrentPage(1);
@@ -90,9 +117,17 @@ const GigListPage = () => {
     setMinPrice('');
     setMaxPrice('');
     setSkill('');
-    setSearchParams({});
+    // Preserve category when clearing filters so category-based views continue to work
+    const params = new URLSearchParams();
+    if (category) params.set('category', category);
+    setSearchParams(params);
     setCurrentPage(1);
   };
+
+  // Keep local `category` state in sync when URL search params change
+  useEffect(() => {
+    setCategory(searchParams.get('category') || '');
+  }, [searchParams]);
 
   if (loading) {
     return (

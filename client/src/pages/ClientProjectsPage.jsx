@@ -12,6 +12,7 @@ import { getClientOrders, approveWork, requestWorkRevision } from '../api/orderA
 import { USER_ROLES, PROPOSAL_STATUS, ORDER_STATUS } from '../utils/constants.js';
 import { getStatusDisplay, canReviewCompletion } from '../utils/statusHelpers.js';
 import styles from './ClientProjectsPage.module.css';
+import { WarningIcon, NotificationIcon, NoteIcon, MoneyIcon, PersonIcon, CalendarIcon, RefreshIcon, CheckIcon } from '../components/icons/Icons.jsx';
 
 const ClientProjectsPage = () => {
     const { user, role } = useAuth();
@@ -99,9 +100,14 @@ const ClientProjectsPage = () => {
             setSubmitting(true);
             setError('');
 
-            // Use unified order API - combine feedback and rating into client notes
-            const clientNotes = `${feedback.trim()}${rating ? '\n\nRating: ' + parseInt(rating) : ''}`;
-            await approveWork(selectedProject.id, clientNotes);
+            // Use unified order API - send structured JSON payload expected by backend
+            const payload = {
+                status: 'COMPLETED',
+                clientNotes: feedback.trim(),
+                rating: parseInt(rating, 10)
+            };
+
+            await approveWork(selectedProject.id, payload);
 
             setShowApprovalModal(false);
             setFeedback('');
@@ -193,7 +199,7 @@ const ClientProjectsPage = () => {
 
                 {error && (
                     <div className={styles.errorBanner}>
-                        <span>⚠️</span>
+                        <span><WarningIcon /></span>
                         {error}
                     </div>
                 )}
@@ -216,14 +222,14 @@ const ClientProjectsPage = () => {
                             className={`${styles.filterButton} ${filter === 'COMPLETION_REQUESTED' ? styles.active : ''}`}
                             onClick={() => setFilter('COMPLETION_REQUESTED')}
                         >
-                            🔔 Awaiting Approval ({awaitingApprovalCount})
+                            <NotificationIcon /> Awaiting Approval ({awaitingApprovalCount})
                         </button>
                     </div>
                 </div>
 
                 {filteredProjects.length === 0 ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.emptyIcon}>📋</div>
+                        <div className={styles.emptyIcon}><NoteIcon /></div>
                         <h3>No Projects Found</h3>
                         <p>
                             {filter === 'ALL'
@@ -270,7 +276,7 @@ const ClientProjectsPage = () => {
                                     {(project.status === PROPOSAL_STATUS.COMPLETION_REQUESTED || project.status === PROPOSAL_STATUS.AWAITING_COMPLETION) && (
                                         <div className={styles.completionBox}>
                                             <div className={styles.completionBoxHeader}>
-                                                <span className={styles.completionBoxIcon}>📋</span>
+                                                <span className={styles.completionBoxIcon}><NoteIcon /></span>
                                                 <strong>Completion Request</strong>
                                             </div>
                                             {project.completionNotes && (
@@ -304,14 +310,14 @@ const ClientProjectsPage = () => {
 
                                     <div className={styles.projectMeta}>
                                         <div className={styles.projectMetaItem}>
-                                            <span className={styles.metaIcon}>💰</span>
+                                            <span className={styles.metaIcon}><MoneyIcon /></span>
                                             <div>
                                                 <span className={styles.metaLabel}>Project Value</span>
                                                 <span className={styles.metaValue}>{formatCurrency(project.price)}</span>
                                             </div>
                                         </div>
                                         <div className={styles.projectMetaItem}>
-                                            <span className={styles.metaIcon}>👤</span>
+                                            <span className={styles.metaIcon}><PersonIcon /></span>
                                             <div>
                                                 <span className={styles.metaLabel}>Freelancer</span>
                                                 <span className={styles.metaValue}>{project.freelancerName}</span>
@@ -319,7 +325,7 @@ const ClientProjectsPage = () => {
                                         </div>
                                         {project.acceptedAt && (
                                             <div className={styles.projectMetaItem}>
-                                                <span className={styles.metaIcon}>📅</span>
+                                                <span className={styles.metaIcon}><CalendarIcon /></span>
                                                 <div>
                                                     <span className={styles.metaLabel}>Started</span>
                                                     <span className={styles.metaValue}>
@@ -348,14 +354,14 @@ const ClientProjectsPage = () => {
                                                     size="small"
                                                     onClick={() => handleApprove(project)}
                                                 >
-                                                    ✓ Approve
+                                                    <CheckIcon /> Approve
                                                 </Button>
                                                 <Button
                                                     variant="warning"
                                                     size="small"
                                                     onClick={() => handleReject(project)}
                                                 >
-                                                    🔄 Request Changes
+                                                    <RefreshIcon /> Request Changes
                                                 </Button>
                                             </>
                                         )}

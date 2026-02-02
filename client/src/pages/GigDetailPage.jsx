@@ -8,6 +8,7 @@ import PayNowButton from '../components/payment/PayNowButton.jsx';
 import { formatCurrency } from '../utils/nameMapper.js';
 import { USER_ROLES } from '../utils/constants.js';
 import styles from './GigDetailPage.module.css';
+import { ChatIcon, PersonIcon, CloseIcon, CheckIcon, FlashIcon, StarIcon, RefreshIcon, TimeIcon } from '../components/icons/Icons.jsx';
 
 const GigDetailPage = () => {
   const { id } = useParams();
@@ -162,11 +163,12 @@ Feel free to message me before placing an order to discuss your specific require
 
   const isOwner = user && gig.freelancerId === user.id;
   const canEdit = isOwner && role === USER_ROLES.FREELANCER;
+  const isFreelancerUser = role === USER_ROLES.FREELANCER;
 
-  // Mock additional data for better UI
+  // Map API fields to UI-friendly values
   const skillsArray = gig.skills ? (typeof gig.skills === 'string' ? gig.skills.split(',').map(s => s.trim()) : gig.skills) : [];
-  const rating = gig.freelancerRating || (4.5 + Math.random() * 0.5).toFixed(1);
-  const reviewCount = gig.freelancerReviews || Math.floor(Math.random() * 150) + 10;
+  const rating = typeof gig.averageRating === 'number' || typeof gig.averageRating === 'string' ? gig.averageRating : null;
+  const reviewCount = gig.ratingCount ?? (Array.isArray(gig.recentReviews) ? gig.recentReviews.length : 0);
 
   return (
     <div className={styles.gigDetail}>
@@ -198,11 +200,11 @@ Feel free to message me before placing an order to discuss your specific require
                     )}
                   </div>
                   <div className={styles.freelancerInfo}>
-                    <Link to={`/freelancer/profile/${gig.freelancerId}`} className={styles.freelancerName}>
+                    <Link to={`/freelancer/${gig.freelancerId}`} className={styles.freelancerName}>
                       {gig.freelancerName || 'Anonymous Freelancer'}
                     </Link>
                     <div className={styles.freelancerRating}>
-                      ⭐ {rating} ({reviewCount} reviews) • Top Rated Seller
+                      {rating ? `⭐ ${rating}` : '⭐ —'} {reviewCount ? `(${reviewCount} reviews)` : ''}
                     </div>
                   </div>
                 </div>
@@ -336,10 +338,23 @@ Feel free to message me before placing an order to discuss your specific require
 
               {activeTab === 'reviews' && (
                 <div className={styles.reviews}>
-                  <div className={styles.reviewsPlaceholder}>
-                    <h3>Customer Reviews</h3>
-                    <p>Reviews functionality coming soon!</p>
-                  </div>
+                  {gig.recentReviews && gig.recentReviews.length > 0 ? (
+                    gig.recentReviews.map((r) => (
+                      <div key={r.id} className={styles.reviewItem}>
+                        <div className={styles.reviewHeader}>
+                          <strong>{r.clientName || 'Client'}</strong>
+                          <span className={styles.reviewRating}>⭐ {r.rating ?? '—'}</span>
+                        </div>
+                        {r.feedback && <p className={styles.reviewText}>{r.feedback}</p>}
+                        {r.createdAt && <div className={styles.reviewMeta}>Posted: {new Date(r.createdAt).toLocaleDateString()}</div>}
+                      </div>
+                    ))
+                  ) : (
+                    <div className={styles.reviewsPlaceholder}>
+                      <h3>Customer Reviews</h3>
+                      <p>No reviews yet.</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -351,27 +366,27 @@ Feel free to message me before placing an order to discuss your specific require
           <div className={styles.orderCard}>
             <div className={styles.priceSection}>
               <div className={styles.priceHeader}>
-                <span className={styles.price}>{formatCurrency(gig.fixedPrice)}</span>
+                <span className={styles.price}>{formatCurrency(gig.fixedPrice ?? gig.fixedPrice)}</span>
                 <span className={styles.priceLabel}>Starting at</span>
               </div>
             </div>
 
             <div className={styles.packageFeatures}>
               <div className={styles.feature}>
-                <span className={styles.featureIcon}>⏱️</span>
-                <span className={styles.featureText}>{gig.deliveryTime || '3 days'} delivery</span>
+                <span className={styles.featureIcon}><TimeIcon /></span>
+                <span className={styles.featureText}>{gig.deliveryTime || '—'} delivery</span>
               </div>
               <div className={styles.feature}>
-                <span className={styles.featureIcon}>🔄</span>
-                <span className={styles.featureText}>{gig.revisions || '2'} revisions</span>
+                <span className={styles.featureIcon}><RefreshIcon /></span>
+                <span className={styles.featureText}>{gig.revisions || '—'} revisions</span>
               </div>
               <div className={styles.feature}>
-                <span className={styles.featureIcon}>💬</span>
+                <span className={styles.featureIcon}><ChatIcon /></span>
                 <span className={styles.featureText}>24h response time</span>
               </div>
             </div>
 
-            {!isOwner ? (
+            {!isOwner && !isFreelancerUser ? (
               <div className={styles.orderActions}>
                 <PayNowButton
                   referenceType="GIG"
@@ -394,13 +409,13 @@ Feel free to message me before placing an order to discuss your specific require
                   onClick={handleContactFreelancer}
                   className={styles.contactButton}
                 >
-                  💬 Contact Seller
+                  <ChatIcon /> Contact Seller
                 </Button>
               </div>
-            ) : (
+            ) : isOwner ? (
               <div className={styles.ownerActions}>
                 <div className={styles.ownerNote}>
-                  <span className={styles.ownerIcon}>👤</span>
+                  <span className={styles.ownerIcon}><PersonIcon /></span>
                   <span>This is your gig</span>
                 </div>
                 <Link to={`/freelancer/gigs/edit/${gig.id}`}>
@@ -409,6 +424,14 @@ Feel free to message me before placing an order to discuss your specific require
                   </Button>
                 </Link>
               </div>
+            ) : (
+              // Hide CTAs for users with FREELANCER role
+              isFreelancerUser && (
+                <div className={styles.restrictedNotice}>
+                  <div className={styles.restrictedIcon}><CloseIcon /></div>
+                  <div>Freelancer accounts cannot book gigs.</div>
+                </div>
+              )
             )}
           </div>
 
@@ -417,19 +440,19 @@ Feel free to message me before placing an order to discuss your specific require
             <h4>Why choose this freelancer?</h4>
             <div className={styles.highlights}>
               <div className={styles.highlight}>
-                <span className={styles.highlightIcon}>✅</span>
+                <span className={styles.highlightIcon}><CheckIcon /></span>
                 <span>Top-rated seller</span>
               </div>
               <div className={styles.highlight}>
-                <span className={styles.highlightIcon}>⚡</span>
+                <span className={styles.highlightIcon}><FlashIcon /></span>
                 <span>Fast 24h response</span>
               </div>
               <div className={styles.highlight}>
-                <span className={styles.highlightIcon}>🏆</span>
+                <span className={styles.highlightIcon}><StarIcon /></span>
                 <span>98% completion rate</span>
               </div>
               <div className={styles.highlight}>
-                <span className={styles.highlightIcon}>🔄</span>
+                <span className={styles.highlightIcon}><RefreshIcon /></span>
                 <span>Unlimited revisions</span>
               </div>
             </div>

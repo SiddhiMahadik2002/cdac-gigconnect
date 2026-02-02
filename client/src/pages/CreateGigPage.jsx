@@ -19,8 +19,8 @@ const createGigSchema = z.object({
     .min(1, 'Description is required')
     .max(VALIDATION.MAX_DESCRIPTION_LENGTH, `Description must be less than ${VALIDATION.MAX_DESCRIPTION_LENGTH} characters`),
   fixedPrice: z.number()
-    .min(VALIDATION.MIN_PRICE, `Price must be at least $${VALIDATION.MIN_PRICE}`)
-    .max(VALIDATION.MAX_PRICE, `Price must be less than $${VALIDATION.MAX_PRICE}`),
+    .min(VALIDATION.MIN_PRICE, `Price must be at least Rs ${VALIDATION.MIN_PRICE}`)
+    .max(VALIDATION.MAX_PRICE, `Price must be less than Rs ${VALIDATION.MAX_PRICE}`),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
   images: z.array(z.string()).max(3, 'Maximum 3 images allowed').optional(),
 });
@@ -157,7 +157,7 @@ const CreateGigPage = () => {
           />
 
           <Input
-            label="Price (USD)"
+            label="Price (Rs)"
             type="number"
             required
             {...register('fixedPrice', { valueAsNumber: true })}

@@ -11,6 +11,7 @@ import GigListPage from '../pages/GigListPage.jsx';
 import GigDetailPage from '../pages/GigDetailPage.jsx';
 import DashboardPage from '../pages/DashboardPage.jsx';
 import FreelancerProfilePage from '../pages/FreelancerProfilePage.jsx';
+import FreelancerPublicProfilePage from '../pages/FreelancerPublicProfilePage.jsx';
 import FreelancerGigsPage from '../pages/FreelancerGigsPage.jsx';
 import CreateGigPage from '../pages/CreateGigPage.jsx';
 import EditGigPage from '../pages/EditGigPage.jsx';
@@ -59,6 +60,8 @@ const AppRoutes = () => {
                 <Route index element={<HomePage />} />
                 <Route path="gigs" element={<GigListPage />} />
                 <Route path="gigs/:id" element={<GigDetailPage />} />
+                {/* Public freelancer profile (view-only) */}
+                <Route path="freelancer/:id" element={<FreelancerPublicProfilePage />} />
 
                 {/* Protected routes for freelancers */}
                 <Route path="dashboard" element={

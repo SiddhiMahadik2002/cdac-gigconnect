@@ -23,6 +23,13 @@ const Input = forwardRef(({
         icon && styles.hasIcon
     ].filter(Boolean).join(' ');
 
+    // If react-hook-form's `register` was spread into props it will appear
+    // as `props.ref`. Prefer that ref for form registration, otherwise
+    // fall back to the forwarded ref.
+    const inputProps = { ...props };
+    const registerRef = inputProps.ref;
+    delete inputProps.ref;
+
     return (
         <div className={styles.inputGroup}>
             {label && (
@@ -36,9 +43,9 @@ const Input = forwardRef(({
             <div className={wrapperClass}>
                 {icon && <span className={styles.icon}>{icon}</span>}
                 <input
-                    ref={ref}
+                    ref={registerRef || ref}
                     className={inputClass}
-                    {...props}
+                    {...inputProps}
                 />
             </div>
             {error && (

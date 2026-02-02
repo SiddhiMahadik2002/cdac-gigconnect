@@ -27,11 +27,15 @@ const TextArea = forwardRef(({
     ].filter(Boolean).join(' ');
 
     const textareaProps = {
-        ref,
-        className: textareaClass,
-        maxLength,
         ...props
     };
+
+    const registerRef = textareaProps.ref;
+    delete textareaProps.ref;
+
+    textareaProps.ref = registerRef || ref;
+    textareaProps.className = textareaClass;
+    textareaProps.maxLength = maxLength;
 
     // Only add value prop if it's provided (for controlled components)
     if (value !== undefined) {

@@ -21,8 +21,8 @@ const editGigSchema = z.object({
     .min(1, 'Description is required')
     .max(VALIDATION.MAX_DESCRIPTION_LENGTH, `Description must be less than ${VALIDATION.MAX_DESCRIPTION_LENGTH} characters`),
   fixedPrice: z.number()
-    .min(VALIDATION.MIN_PRICE, `Price must be at least $${VALIDATION.MIN_PRICE}`)
-    .max(VALIDATION.MAX_PRICE, `Price must be less than $${VALIDATION.MAX_PRICE}`),
+    .min(VALIDATION.MIN_PRICE, `Price must be at least Rs ${VALIDATION.MIN_PRICE}`)
+    .max(VALIDATION.MAX_PRICE, `Price must be less than Rs ${VALIDATION.MAX_PRICE}`),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
   images: z.array(z.string()).max(3, 'Maximum 3 images allowed').optional(),
 });
@@ -59,13 +59,16 @@ const EditGigPage = () => {
 
         const gigData = await getGigById(id);
 
-        // Check if user owns this gig
-        if (gigData.freelancerId !== user.id) {
+        // Set gig data immediately so the UI can render while auth initializes.
+        // Enforce ownership only if `user` is already available; otherwise
+        // defer enforcement until the effect re-runs when `user?.id` changes.
+        setGig(gigData);
+
+        if (user?.id && gigData.freelancerId !== user.id) {
           setError('You can only edit your own gigs');
+          setGig(null);
           return;
         }
-
-        setGig(gigData);
 
         // Populate form with existing data
         setValue('title', gigData.title);
@@ -86,13 +89,18 @@ const EditGigPage = () => {
 
       } catch (err) {
         console.error('Error fetching gig:', err);
-        setError('Failed to load gig data. Please try again.');
+        const fetchMsg = err?.response
+          ? `${err.response.status}: ${err.response.data?.message || JSON.stringify(err.response.data)}`
+          : err.message || 'Failed to load gig data.';
+        setError(`Failed to load gig data. ${fetchMsg}`);
       } finally {
         setLoading(false);
       }
     };
 
-    if (id && user?.id) {
+    // Always fetch gig when `id` is present so the page doesn't hang
+    // in the loading state while waiting for auth to initialize.
+    if (id) {
       fetchGig();
     }
   }, [id, user?.id, setValue]);
@@ -106,21 +114,24 @@ const EditGigPage = () => {
       const validImages = imageUrls.filter(url => url.trim() !== '');
 
       const gigData = {
+        // Backend expects this exact shape for the PUT payload
         title: data.title,
         description: data.description,
-        fixedPrice: data.fixedPrice,
         skills: data.skills.join(', '), // Convert array to comma-separated string
-        images: validImages,
+        // Include social/profile links if present on the fetched gig, otherwise empty
+        linkedin: gig?.linkedin || '',
+        github: gig?.github || '',
+        portfolio: gig?.portfolio || '',
       };
 
       await updateGig(id, gigData);
       navigate('/freelancer/gigs');
     } catch (err) {
       console.error('Error updating gig:', err);
-      setError(
-        err.response?.data?.message ||
-        'Failed to update gig. Please try again.'
-      );
+      const updateMsg = err?.response
+        ? `${err.response.status}: ${err.response.data?.message || JSON.stringify(err.response.data)}`
+        : err.message || 'Failed to update gig.';
+      setError(`Failed to update gig. ${updateMsg}`);
     } finally {
       setSaving(false);
     }
@@ -219,7 +230,7 @@ const EditGigPage = () => {
           />
 
           <Input
-            label="Price (USD)"
+            label="Price (Rs)"
             type="number"
             required
             {...register('fixedPrice', { valueAsNumber: true })}

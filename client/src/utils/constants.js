@@ -10,6 +10,7 @@ export const USER_ROLES = {
 // Local storage keys
 export const STORAGE_KEYS = {
     USER_DATA: 'user_data', // Keep this for any non-sensitive user preferences
+    AUTH_TOKEN: 'auth_token', // Key used to store auth token when applicable
 };
 
 // API endpoints

@@ -6,9 +6,12 @@ import Loader from '../components/common/Loader';
 import { formatCurrency } from '../utils/nameMapper.js';
 import { getRequirementById } from '../api/requirement.api.js';
 import { getMyProposals } from '../api/proposal.api.js';
+import { getFreelancerProfile } from '../api/freelancer.api.js';
+import { getGigsByFreelancer } from '../api/gig.api.js';
 import { STATUS_PERMISSIONS, PROPOSAL_STATUS } from '../utils/constants.js';
 import { getStatusDisplay } from '../utils/statusHelpers.js';
 import styles from './DashboardPage.module.css';
+import { BriefcaseIcon, MoneyIcon, NoteIcon, StarIcon, PackageIcon, FlashIcon, PersonIcon, ChartIcon, WarningIcon, CalendarIcon, CheckIcon } from '../components/icons/Icons.jsx';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -37,6 +40,24 @@ const DashboardPage = () => {
             );
             const pendingOrders = orders.filter(order => order.status === 'PENDING_PAYMENT');
             const totalEarnings = activeOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
+
+            // Fetch freelancer profile to get canonical stats like averageRating and totalEarnings
+            // Derive robust user id
+            const userId = user?.userId ?? user?.id ?? user?.freelancerId ?? user?.sub;
+            let profile = null;
+            try {
+              if (userId) profile = await getFreelancerProfile(userId);
+            } catch (pfErr) {
+              console.warn('Failed to fetch freelancer profile:', pfErr);
+            }
+
+            // Fetch gigs to compute total gigs
+            let gigsResult = null;
+            try {
+              if (userId) gigsResult = await getGigsByFreelancer(userId, { page: 1, size: 1 });
+            } catch (gErr) {
+              console.warn('Failed to fetch gigs by freelancer:', gErr);
+            }
 
             // Map order data to project format
             const projectsWithDetails = activeOrders.map((order) => {
@@ -71,15 +92,16 @@ const DashboardPage = () => {
             setActiveProjects(projectsWithDetails);
 
             const realStats = {
-              totalGigs: 3, // Mock for now until gigs API is implemented
+              totalGigs: (gigsResult && typeof gigsResult.totalElements === 'number') ? gigsResult.totalElements : (profile?.totalGigs ?? 0),
               activeGigs: 2,
               totalProposals: orders.length,
               pendingProposals: pendingOrders.length,
               acceptedProposals: activeOrders.length,
-              totalEarnings: totalEarnings,
-              thisMonthEarnings: totalEarnings * 0.3, // Estimate 30% from this month
-              averageRating: 4.8, // Mock for now
-              profileViews: 156, // Mock for now
+              // Prefer backend profile totalEarnings if provided, otherwise calculate from orders
+              totalEarnings: profile?.totalEarnings ?? totalEarnings,
+              thisMonthEarnings: (profile?.thisMonthEarnings) ?? (totalEarnings * 0.3),
+              averageRating: profile?.averageRating ?? 0,
+              profileViews: 156,
               profileCompleteness: 75
             };
 
@@ -164,7 +186,7 @@ const DashboardPage = () => {
         {
           id: 1,
           type: 'proposal',
-          icon: '✅',
+          icon: <CheckIcon />,
           title: 'Proposal Accepted!',
           description: 'Your React Development proposal was accepted',
           time: '2 hours ago',
@@ -173,7 +195,7 @@ const DashboardPage = () => {
         {
           id: 2,
           type: 'gig',
-          icon: '🚀',
+          icon: <FlashIcon />,
           title: 'Gig performance boost',
           description: 'Your "Website Design" gig got 15 new views',
           time: '1 day ago',
@@ -182,7 +204,7 @@ const DashboardPage = () => {
         {
           id: 3,
           type: 'profile',
-          icon: '👁️',
+          icon: <PersonIcon />,
           title: 'Profile viewed',
           description: '5 potential clients viewed your profile',
           time: '2 days ago',
@@ -217,7 +239,7 @@ const DashboardPage = () => {
 
           <nav className={styles.sidebarNav}>
             <Link to="/freelancer/projects" className={styles.navItem}>
-              <div className={styles.navIcon}>📂</div>
+              <div className={styles.navIcon}><PackageIcon /></div>
               <div className={styles.navContent}>
                 <h4 className={styles.navTitle}>Active Projects</h4>
                 <p className={styles.navDescription}>Track your work</p>
@@ -225,7 +247,7 @@ const DashboardPage = () => {
             </Link>
 
             <Link to="/freelancer/gigs/new" className={styles.navItem}>
-              <div className={styles.navIcon}>🎯</div>
+              <div className={styles.navIcon}><ChartIcon /></div>
               <div className={styles.navContent}>
                 <h4 className={styles.navTitle}>Create New Gig</h4>
                 <p className={styles.navDescription}>Showcase your skills</p>
@@ -233,7 +255,7 @@ const DashboardPage = () => {
             </Link>
 
             <Link to="/requirements" className={styles.navItem}>
-              <div className={styles.navIcon}>💼</div>
+              <div className={styles.navIcon}><BriefcaseIcon /></div>
               <div className={styles.navContent}>
                 <h4 className={styles.navTitle}>Browse Requirements</h4>
                 <p className={styles.navDescription}>Find new projects</p>
@@ -241,7 +263,7 @@ const DashboardPage = () => {
             </Link>
 
             <Link to="/freelancer/gigs" className={styles.navItem}>
-              <div className={styles.navIcon}>⚙️</div>
+              <div className={styles.navIcon}><FlashIcon /></div>
               <div className={styles.navContent}>
                 <h4 className={styles.navTitle}>Manage Gigs</h4>
                 <p className={styles.navDescription}>Edit & update</p>
@@ -249,7 +271,7 @@ const DashboardPage = () => {
             </Link>
 
             <Link to="/freelancer/profile" className={styles.navItem}>
-              <div className={styles.navIcon}>👤</div>
+              <div className={styles.navIcon}><PersonIcon /></div>
               <div className={styles.navContent}>
                 <h4 className={styles.navTitle}>Update Profile</h4>
                 <p className={styles.navDescription}>Keep it fresh</p>
@@ -257,7 +279,7 @@ const DashboardPage = () => {
             </Link>
 
             <Link to="/freelancer/completed-work" className={styles.navItem}>
-              <div className={styles.navIcon}>📦</div>
+              <div className={styles.navIcon}><PackageIcon /></div>
               <div className={styles.navContent}>
                 <h4 className={styles.navTitle}>Completed Work</h4>
                 <p className={styles.navDescription}>View your finished projects</p>
@@ -272,7 +294,7 @@ const DashboardPage = () => {
             <div className={styles.header}>
               <div className={styles.headerContent}>
                 <h1 className={styles.title}>
-                  Welcome back, {user?.fullName?.split(' ')[0] || 'Freelancer'}! 👋
+                  Welcome back, {user?.fullName?.split(' ')[0] || 'Freelancer'}!
                 </h1>
                 <p className={styles.subtitle}>
                   Here's an overview of your freelancing journey and recent activity
@@ -282,7 +304,7 @@ const DashboardPage = () => {
 
             {error && (
               <div className={styles.errorAlert}>
-                <span className={styles.errorIcon}>⚠️</span>
+                <span className={styles.errorIcon}><WarningIcon /></span>
                 {error}
               </div>
             )}
@@ -290,7 +312,7 @@ const DashboardPage = () => {
             {/* Stats Grid */}
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
-                <div className={styles.statIcon}>💼</div>
+                <div className={styles.statIcon}><BriefcaseIcon /></div>
                 <div className={styles.statContent}>
                   <h3 className={styles.statValue}>{stats?.totalGigs || 0}</h3>
                   <p className={styles.statLabel}>Total Gigs</p>
@@ -299,7 +321,7 @@ const DashboardPage = () => {
               </div>
 
               <div className={styles.statCard}>
-                <div className={styles.statIcon}>💰</div>
+                <div className={styles.statIcon}><MoneyIcon /></div>
                 <div className={styles.statContent}>
                   <h3 className={styles.statValue}>{formatCurrency(stats?.totalEarnings || 0)}</h3>
                   <p className={styles.statLabel}>Total Earnings</p>
@@ -308,7 +330,7 @@ const DashboardPage = () => {
               </div>
 
               <div className={styles.statCard}>
-                <div className={styles.statIcon}>📝</div>
+                <div className={styles.statIcon}><NoteIcon /></div>
                 <div className={styles.statContent}>
                   <h3 className={styles.statValue}>{stats?.totalProposals || 0}</h3>
                   <p className={styles.statLabel}>Total Proposals</p>
@@ -317,7 +339,7 @@ const DashboardPage = () => {
               </div>
 
               <div className={styles.statCard}>
-                <div className={styles.statIcon}>⭐</div>
+                <div className={styles.statIcon}><StarIcon /></div>
                 <div className={styles.statContent}>
                   <h3 className={styles.statValue}>{stats?.averageRating || 0}</h3>
                   <p className={styles.statLabel}>Avg Rating</p>
@@ -355,7 +377,7 @@ const DashboardPage = () => {
                         </div>
                         <div className={styles.projectStatus}>
                           <span className={styles.statusBadge}>
-                            🔥 In Progress
+                            <FlashIcon /> In Progress
                           </span>
                         </div>
                       </div>
@@ -364,12 +386,12 @@ const DashboardPage = () => {
 
                       <div className={styles.projectMeta}>
                         <div className={styles.projectMetaItem}>
-                          <span className={styles.metaIcon}>💰</span>
+                          <span className={styles.metaIcon}><MoneyIcon /></span>
                           <span className={styles.metaLabel}>Project Value</span>
                           <span className={styles.metaValue}>{formatCurrency(project.price)}</span>
                         </div>
                         <div className={styles.projectMetaItem}>
-                          <span className={styles.metaIcon}>📅</span>
+                          <span className={styles.metaIcon}><CalendarIcon /></span>
                           <span className={styles.metaLabel}>Started</span>
                           <span className={styles.metaValue}>
                             {new Date(project.startDate).toLocaleDateString('en-US', {
@@ -409,7 +431,7 @@ const DashboardPage = () => {
                 </div>
               ) : (
                 <div className={styles.emptyState}>
-                  <div className={styles.emptyStateIcon}>📋</div>
+                  <div className={styles.emptyStateIcon}><NoteIcon /></div>
                   <h3 className={styles.emptyStateTitle}>No Active Projects Yet</h3>
                   <p className={styles.emptyStateText}>
                     Start browsing requirements and submit proposals to land your first project!
@@ -442,7 +464,7 @@ const DashboardPage = () => {
                     ))
                   ) : (
                     <div className={styles.emptyActivity}>
-                      <div className={styles.emptyIcon}>📝</div>
+                      <div className={styles.emptyIcon}><NoteIcon /></div>
                       <h3>No recent activity</h3>
                       <p>Start creating gigs to see your activity here</p>
                     </div>

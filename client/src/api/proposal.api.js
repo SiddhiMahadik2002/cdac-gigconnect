@@ -50,8 +50,14 @@ export const approveCompletion = async (proposalOrOrderId, data) => {
     // MIGRATION: Redirect to unified order API. Accepts orderId where possible.
     console.warn('DEPRECATED: approveCompletion() now redirects to approveWork(). Use approveWork(orderId, clientNotes) directly.');
 
-    const clientNotes = `${data.feedback || ''}${data.rating ? '\n\nRating: ' + data.rating : ''}`;
-    return await approveWork(proposalOrOrderId, clientNotes);
+    // Build structured payload expected by new order API
+    const payload = {
+        status: 'COMPLETED',
+        clientNotes: data.feedback || data.clientNotes || '',
+        rating: data.rating ? parseInt(data.rating, 10) : undefined
+    };
+
+    return await approveWork(proposalOrOrderId, payload);
 };
 
 // Reject project completion (CLIENT only) - USE ORDER API

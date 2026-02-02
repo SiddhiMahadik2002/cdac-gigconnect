@@ -5,6 +5,70 @@
     padding: 40px 20px;
 }
 
+/* Public profile variant: more generous spacing for read-only public view */
+.publicProfile {
+    padding: 80px 32px;
+}
+
+.publicProfile .profileContainer {
+    max-width: 1100px;
+    padding: 0 20px;
+}
+
+.publicProfile .profileHeader {
+    padding: 56px;
+    gap: 40px;
+    margin-bottom: 40px;
+    border-radius: 28px;
+}
+
+.publicProfile .avatar {
+    width: 140px;
+    height: 140px;
+}
+
+.publicProfile .avatarText {
+    font-size: 3.6rem;
+}
+
+.publicProfile .profileName {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.publicProfile .profileEmail {
+    margin-bottom: 16px;
+}
+
+.publicProfile .profileStats {
+    padding: 28px 36px;
+    gap: 40px;
+}
+
+.publicProfile .section {
+    padding: 40px;
+    margin-bottom: 28px;
+}
+
+.publicProfile .skillTags {
+    gap: 14px;
+}
+
+.publicProfile .reviewItem {
+    margin-bottom: 20px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #eef2f7;
+}
+
+.publicProfile .reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
 .profileContainer {
     max-width: 1200px;
     margin: 0 auto;

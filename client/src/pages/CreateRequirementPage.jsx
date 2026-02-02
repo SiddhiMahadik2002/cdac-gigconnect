@@ -9,6 +9,7 @@ import { USER_ROLES } from '../utils/constants.js';
 import Input from '../components/common/Input.jsx';
 import TextArea from '../components/common/TextArea.jsx';
 import Button from '../components/common/Button.jsx';
+import { NoteIcon, MoneyIcon, InfoIcon } from '../components/icons/Icons.jsx';
 import styles from './CreateRequirementPage.module.css';
 
 // Validation schema
@@ -25,11 +26,11 @@ const requirementSchema = z.object({
         .refine(skills => skills.length > 0, 'At least one skill is required')
         .refine(skills => skills.length <= 10, 'Maximum 10 skills allowed'),
     minPrice: z.number()
-        .min(5, 'Minimum price must be at least $5')
-        .max(10000, 'Minimum price cannot exceed $10,000'),
+        .min(5, 'Minimum price must be at least Rs 5')
+        .max(10000, 'Minimum price cannot exceed Rs 10,000'),
     maxPrice: z.number()
-        .min(5, 'Maximum price must be at least $5')
-        .max(10000, 'Maximum price cannot exceed $10,000'),
+        .min(5, 'Maximum price must be at least Rs 5')
+        .max(10000, 'Maximum price cannot exceed Rs 10,000'),
     yoeRequired: z.number()
         .min(0, 'Years of experience cannot be negative')
         .max(30, 'Years of experience cannot exceed 30'),
@@ -117,7 +118,7 @@ const CreateRequirementPage = () => {
                     <div className={styles.formSection}>
                         {serverError && (
                             <div className={styles.errorAlert}>
-                                <span className={styles.errorIcon}>⚠️</span>
+                                <span className={styles.errorIcon}><InfoIcon /></span>
                                 <span>{serverError}</span>
                             </div>
                         )}
@@ -125,7 +126,7 @@ const CreateRequirementPage = () => {
                         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                             <div className={styles.formGroup}>
                                 <label className={styles.sectionLabel}>
-                                    📋 Project Details
+                                    <NoteIcon /> Project Details
                                 </label>
 
                                 <Input
@@ -157,12 +158,12 @@ const CreateRequirementPage = () => {
 
                             <div className={styles.formGroup}>
                                 <label className={styles.sectionLabel}>
-                                    💰 Budget & Experience
+                                    <MoneyIcon /> Budget & Experience
                                 </label>
 
                                 <div className={styles.priceRange}>
                                     <Input
-                                        label="Minimum Budget ($)"
+                                        label="Minimum Budget (Rs)"
                                         type="number"
                                         min="5"
                                         max="10000"
@@ -173,7 +174,7 @@ const CreateRequirementPage = () => {
                                     />
 
                                     <Input
-                                        label="Maximum Budget ($)"
+                                        label="Maximum Budget (Rs)"
                                         type="number"
                                         min={watchedMinPrice || 5}
                                         max="10000"
@@ -220,7 +221,7 @@ const CreateRequirementPage = () => {
 
                     <div className={styles.sidebar}>
                         <div className={styles.tipsCard}>
-                            <h3>💡 Tips for Better Results</h3>
+                            <h3><InfoIcon /> Tips for Better Results</h3>
                             <ul className={styles.tipsList}>
                                 <li>
                                     <strong>Be specific:</strong> Clear requirements attract quality proposals
@@ -241,7 +242,7 @@ const CreateRequirementPage = () => {
                         </div>
 
                         <div className={styles.processCard}>
-                            <h3>📋 What Happens Next?</h3>
+                            <h3><NoteIcon /> What Happens Next?</h3>
                             <div className={styles.processSteps}>
                                 <div className={styles.step}>
                                     <span className={styles.stepNumber}>1</span>

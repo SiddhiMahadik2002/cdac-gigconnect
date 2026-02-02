@@ -327,17 +327,19 @@ export const deliverWork = async (orderId, deliveryNotes) => {
 };
 
 /**
- * Approve work
+ * Approve work (client)
  * @param {string} orderId - The order ID
- * @param {string} clientNotes - Client approval notes
+ * @param {Object} approvalData - Approval payload expected by backend
+ * @param {string} approvalData.status - New status, e.g. 'COMPLETED'
+ * @param {string} approvalData.clientNotes - Client notes / feedback
+ * @param {number} [approvalData.rating] - Optional rating (1-5)
  * @returns {Promise<Object>} The updated order
  */
-export const approveWork = async (orderId, clientNotes) => {
+export const approveWork = async (orderId, approvalData) => {
     try {
         const endpoint = API_ENDPOINTS.GIG_ORDERS.APPROVE.replace('{id}', orderId);
-        const response = await apiClient.put(endpoint, clientNotes, {
-            headers: { 'Content-Type': 'text/plain' }
-        });
+        // Send JSON payload - backend expects structured JSON like { status, clientNotes, rating }
+        const response = await apiClient.put(endpoint, approvalData);
         return response.data;
     } catch (error) {
         console.error('Failed to approve work:', error);

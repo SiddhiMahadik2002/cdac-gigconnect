@@ -1,4 +1,6 @@
+import React from 'react';
 import { STATUS_CONFIG, STATUS_PERMISSIONS, PROPOSAL_STATUS, REQUIREMENT_STATUS } from './constants.js';
+import { CheckIcon, InfoIcon, CloseIcon, FlashIcon, RefreshIcon, NotificationIcon, NoteIcon } from '../components/icons/Icons.jsx';
 
 /**
  * Get display configuration for a status
@@ -6,11 +8,33 @@ import { STATUS_CONFIG, STATUS_PERMISSIONS, PROPOSAL_STATUS, REQUIREMENT_STATUS 
  * @returns {object} Display configuration with label, icon, color, description
  */
 export const getStatusDisplay = (status) => {
-    return STATUS_CONFIG[status] || {
+    const cfg = STATUS_CONFIG[status];
+    const defaultObj = {
         label: status?.replace(/_/g, ' ') || 'Unknown',
-        icon: '📌',
+        icon: React.createElement(NoteIcon, null),
         color: 'gray',
         description: 'Status unknown',
+    };
+
+    if (!cfg) return defaultObj;
+
+    const iconMap = {
+        '⏳': React.createElement(InfoIcon, null),
+        '✅': React.createElement(CheckIcon, null),
+        '❌': React.createElement(CloseIcon, null),
+        '🔥': React.createElement(FlashIcon, null),
+        '🔄': React.createElement(RefreshIcon, null),
+        '✓': React.createElement(CheckIcon, null),
+        '📢': React.createElement(NotificationIcon, null),
+        '🔒': React.createElement(CloseIcon, null),
+        '📌': React.createElement(NoteIcon, null),
+    };
+
+    const mappedIcon = typeof cfg.icon === 'string' ? (iconMap[cfg.icon] || React.createElement(NoteIcon, null)) : cfg.icon;
+
+    return {
+        ...cfg,
+        icon: mappedIcon,
     };
 };
 

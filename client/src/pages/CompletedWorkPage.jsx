@@ -7,6 +7,7 @@ import Loader from '../components/common/Loader.jsx';
 import Button from '../components/common/Button.jsx';
 import { Link } from 'react-router-dom';
 import styles from './MyOrdersPage.module.css';
+import { CheckIcon, PackageIcon, ChartIcon } from '../components/icons/Icons.jsx';
 
 const CompletedWorkPage = () => {
     const { user, role } = useAuth();
@@ -62,7 +63,7 @@ const CompletedWorkPage = () => {
 
                 {orders.length === 0 && !loading ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.emptyIcon}>✅</div>
+                        <div className={styles.emptyIcon}><CheckIcon /></div>
                         <h3>No Completed Work Yet</h3>
                         <p>When you finish projects, they'll appear here.</p>
                         <Link to="/requirements">
@@ -77,10 +78,10 @@ const CompletedWorkPage = () => {
                                     <div className={styles.orderInfo}>
                                         <h3 className={styles.gigTitle}>{order.title || order.requirementTitle || 'Completed Project'}</h3>
                                         <p className={styles.orderId}>Order #{order.id}</p>
-                                        <span className={styles.orderType}>{order.orderType === 'GIG_PURCHASE' ? '🛍️ Gig' : '🎯 Project'}</span>
+                                        <span className={styles.orderType}>{order.orderType === 'GIG_PURCHASE' ? (<><PackageIcon /> <span>Gig</span></>) : (<><ChartIcon /> <span>Project</span></>)}</span>
                                     </div>
                                     <div className={`${styles.statusBadge} ${styles.green}`}>
-                                        <span className={styles.statusIcon}>✅</span>
+                                        <span className={styles.statusIcon}><CheckIcon /></span>
                                         <span>Completed</span>
                                     </div>
                                 </div>
